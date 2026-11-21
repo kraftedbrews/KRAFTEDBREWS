@@ -1,3 +1,26 @@
+const promoImages = [
+  {
+    src: "/images/promo/promo-1.png",
+    alt: "Customer celebrating a Match Your Bill win in a maroon shirt.",
+  },
+  {
+    src: "/images/promo/promo-2.png",
+    alt: "Customer holding a winning receipt during the Match Your Bill promotion.",
+  },
+  {
+    src: "/images/promo/promo-3.png",
+    alt: "Customer celebrating the Match Your Bill challenge in a yellow cardigan.",
+  },
+  {
+    src: "/images/promo/promo-4.png",
+    alt: "Customer showing a receipt beside the Match Your Bill timer.",
+  },
+  {
+    src: "/images/promo/promo-5.png",
+    alt: "Customer celebrating a Match Your Bill win in a red shirt.",
+  },
+];
+
 export default function App() {
   return (
     <>
@@ -335,6 +358,45 @@ export default function App() {
               Read our story <span aria-hidden="true">↗</span>
             </a>
           </div>
+        </div>
+      </section>
+
+      <section
+        className="home-promo"
+        aria-labelledby="homePromoHeading"
+      >
+        <div className="wrap">
+          <div className="home-promo-intro">
+            <div>
+              <p className="home-promo-eyebrow">Promo</p>
+              <h2 className="home-promo-heading" id="homePromoHeading">
+                <span className="script">Match your bill.</span>
+                <br />
+                Get 50% off.
+              </h2>
+            </div>
+            <p className="home-promo-copy">
+              One try per receipt. Match the timer to your bill and get 50% off
+              your order.
+            </p>
+          </div>
+          <ul
+            className="home-promo-gallery"
+            aria-label="Photos from the Match Your Bill promotion"
+          >
+            {promoImages.map((image) => (
+              <li key={image.src}>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  width="768"
+                  height="960"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
