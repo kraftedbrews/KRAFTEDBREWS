@@ -497,6 +497,7 @@ nav ul a.active::after {
 .hero-receipt-card {
   position: relative;
   width: clamp(180px, 15vw, 230px);
+  box-sizing: border-box;
   min-height: 290px;
   overflow: hidden;
   border: 1px solid rgba(98, 71, 44, 0.18);
@@ -1108,11 +1109,14 @@ nav ul a.active::after {
 }
 @media (max-width: 480px) {
   .hero-feature {
-    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .hero-feature-brand {
+    transform: scale(0.58);
   }
   .hero-product canvas {
-    width: min(100%, 290px);
-    height: 390px;
+    width: 100%;
+    height: clamp(230px, 70vw, 300px);
     margin: 0 auto;
   }
   .hero-product-menu {
