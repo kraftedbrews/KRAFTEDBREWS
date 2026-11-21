@@ -22,6 +22,10 @@ export default function App() {
             <span className="slab">BREWS</span>
           </span>
         </a>
+        <span className="mobile-branch-label">
+          <span>Bambang, Nueva Vizcaya</span>
+          <span>Branch</span>
+        </span>
         <ul id="primaryNav">
           <li>
             <a href="#menu">
