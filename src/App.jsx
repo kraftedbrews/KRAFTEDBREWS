@@ -40,9 +40,12 @@ export default function App() {
               alt=""
             />
           </span>
-          <span className="w">
-            <span className="script">krafted</span>
-            <span className="slab">BREWS</span>
+          <span className="header-brand-copy">
+            <span className="w">
+              <span className="script">krafted</span>
+              <span className="slab">BREWS</span>
+            </span>
+            <small className="header-brand-tagline">Specialty Coffee House</small>
           </span>
         </a>
         <span className="mobile-branch-label">
@@ -447,7 +450,7 @@ export default function App() {
               id="dir"
               target="_blank"
               rel="noopener noreferrer"
-              href="https://maps.app.goo.gl/5yyUrr1eUbEy13Cc9"
+              href="https://maps.app.goo.gl/JNLtBioHa1uUWpMcA"
             >
               Get directions
             </a>
@@ -455,8 +458,8 @@ export default function App() {
           <div className="map" id="map">
             <iframe
               id="mapFrame"
-              title="Map to C426+FFM, Bambang, Nueva Vizcaya"
-              src="https://www.google.com/maps?q=C426%2BFFM%2C+Bambang%2C+Nueva+Vizcaya&z=16&output=embed"
+              title="Map to Krafted Brews Kafe, Bambang, Nueva Vizcaya"
+              src="https://www.google.com/maps?q=16.4010444%2C121.1110396&z=16&output=embed"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen

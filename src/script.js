@@ -1935,7 +1935,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function mapz(d) {
     mz = Math.min(20, Math.max(11, mz + d));
     mapFrame.src =
-      "https://www.google.com/maps?q=C426%2BFFM%2C+Bambang%2C+Nueva+Vizcaya&z=" +
+      "https://www.google.com/maps?q=16.4010444%2C121.1110396&z=" +
       mz +
       "&output=embed";
   }
@@ -1961,7 +1961,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     if (/hour|open|close|time/.test(q))
       return "We’re open 7 am – 7 pm on weekdays, 8 am – 8 pm on Saturdays and 8 am – 5 pm on Sundays.";
     if (/where|address|locat|direction|find/.test(q))
-      return "You’ll find us at C426+FFM, Bambang, Nueva Vizcaya, Philippines. The Get directions button in the Visit us section opens the exact map pin.";
+      return "You’ll find us at Krafted Brews Kafe in Bambang, Nueva Vizcaya, Philippines. The Get directions button in the Visit us section opens the exact map pin.";
     if (/wifi|wi-fi|work|laptop|study|seat|pet|dog/.test(q))
       return "Yes to Wi-Fi, power at every table and a quiet upstairs workspace. Pets are welcome on the patio.";
     if (/pastry|food|eat|croissant|cookie|bun/.test(q))
