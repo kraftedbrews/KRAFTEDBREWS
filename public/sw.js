@@ -1,6 +1,8 @@
 const CACHE_NAME = "krafted-brews-v1";
 const STATIC_URLS = [
   "/manifest.webmanifest",
+  "/pwa-install.css",
+  "/pwa-install.js",
   "/favicon.ico",
   "/favicon-32.png",
   "/apple-touch-icon.png",
