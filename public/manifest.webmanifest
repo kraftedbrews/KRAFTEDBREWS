@@ -1,0 +1,32 @@
+{
+  "id": "/",
+  "name": "Krafted Brews Specialty Coffee House",
+  "short_name": "Krafted Brews",
+  "description": "Specialty coffee and more, made to order in Bambang, Nueva Vizcaya.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf6f0",
+  "theme_color": "#28150b",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/krafted-brews-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/krafted-brews-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/krafted-brews-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
