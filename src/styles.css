@@ -266,7 +266,7 @@ nav ul a.active::after {
 }
 .promo-ticket {
   position: absolute;
-  top: calc(100% - 1px);
+  top: calc(100% + 6px);
   right: 5vw;
   z-index: 21;
   display: flex;
@@ -274,7 +274,6 @@ nav ul a.active::after {
   gap: 8px;
   padding: 7px 12px 8px 8px;
   border: 1px dashed rgba(201, 138, 61, 0.72);
-  border-top: 0;
   border-radius: 0 0 12px 12px;
   background: var(--oat);
   color: var(--esp);
