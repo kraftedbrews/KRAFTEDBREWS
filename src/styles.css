@@ -221,6 +221,11 @@ nav ul a {
   text-decoration: none;
   color: var(--esp);
   position: relative;
+  font-size: 18px;
+  font-style: italic;
+}
+.mobile-nav-icon {
+  display: none;
 }
 nav ul a:hover {
   text-decoration: underline;
@@ -259,10 +264,11 @@ nav ul a.active::after {
     position: fixed;
     z-index: 21;
     top: auto;
-    right: 0;
+    right: auto;
     bottom: 0;
-    left: 0;
+    left: 50%;
     display: flex;
+    width: min(100%, 440px);
     justify-content: space-around;
     align-items: stretch;
     gap: 0;
@@ -274,22 +280,50 @@ nav ul a.active::after {
     box-shadow: 0 -12px 32px rgba(40, 21, 11, 0.12);
     backdrop-filter: blur(16px);
     overflow: hidden;
-    transform: none;
+    transform: translateX(-50%);
     opacity: 1;
     visibility: visible;
   }
   nav ul li {
     flex: 1 1 0;
   }
+  nav ul li:first-child {
+    order: 2;
+  }
+  nav ul li:nth-child(2) {
+    order: 1;
+  }
+  nav ul li:nth-child(3) {
+    order: 3;
+  }
   nav ul a {
     display: flex;
     min-height: 48px;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 4px;
-    font-size: 12px;
+    gap: 3px;
+    padding: 6px 4px;
+    font-size: 15px;
     font-weight: 600;
     text-align: center;
+  }
+  nav ul a.active {
+    border-radius: 12px;
+    background: rgba(201, 138, 61, 0.16);
+    color: var(--esp);
+  }
+  nav ul a.active::after {
+    display: none;
+  }
+  .mobile-nav-icon {
+    display: block;
+    width: 19px;
+    height: 19px;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   nav ul a.active::after {
     right: 25%;
@@ -1129,11 +1163,17 @@ h2 {
 #menu {
   padding-top: 0;
 }
+#menu .wrap > h2,
+#menu .wrap > .lead {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
 .menu-showcase {
   position: relative;
   isolation: isolate;
   height: clamp(520px, 72svh, 720px);
-  margin: 0 -5vw clamp(60px, 8vw, 100px);
+  margin: 0 -5vw 32px;
   overflow: hidden;
   background: #d7c4e8;
   transition: background-color 0.7s ease;
@@ -1445,6 +1485,7 @@ h2 {
 }
 .tabs {
   display: flex;
+  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 28px;

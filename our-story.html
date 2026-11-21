@@ -7,7 +7,7 @@
   <title>Our Story — Krafted Brews</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Cormorant+Garamond:wght@500;600;700&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --espresso: #28150b;
@@ -19,10 +19,11 @@
       --caramel: #c98a3d;
       --copper: #a96f43;
       --roasted: #573927;
+      --header-height: 82px;
       --ease: cubic-bezier(.22, 1, .36, 1);
     }
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    html { scroll-behavior: smooth; scroll-padding-top: var(--header-height); }
     body {
       margin: 0;
       overflow-x: hidden;
@@ -49,14 +50,22 @@
       position: fixed;
       z-index: 50;
       inset: 0 0 auto;
-      height: 76px;
+      height: var(--header-height);
       display: flex;
       align-items: center;
       background: rgba(255,255,255,.86);
       border-bottom: 1px solid rgba(40,21,11,.08);
       backdrop-filter: blur(16px) saturate(1.3);
     }
-    .topbar .shell { display: flex; align-items: center; justify-content: space-between; }
+    .topbar .shell {
+      display: flex;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 5vw;
+    }
     .brand {
       display: inline-flex;
       align-items: center;
@@ -83,11 +92,30 @@
     }
     .brand-script { font: 400 28px/1 "Kaushan Script", cursive; }
     .brand-slab { font: 400 12px/1 "Alfa Slab One", Georgia, serif; letter-spacing: .04em; }
-    .topbar nav { display: flex; align-items: center; gap: 28px; }
+    .topbar nav ul {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 15px;
+    }
     .topbar nav a {
       position: relative;
-      font-size: 14px;
+      font-size: 18px;
+      font-style: italic;
       text-decoration: none;
+    }
+    .mobile-nav-icon { display:none; }
+    .topbar nav a[aria-current="page"] { color: var(--caramel); }
+    .topbar nav a[aria-current="page"]::after {
+      right: 0;
+      bottom: -8px;
+      left: 0;
+      height: 2px;
+      background: var(--caramel);
+      transform: none;
     }
     .topbar nav a::after {
       content: "";
@@ -101,6 +129,16 @@
       transition: transform 220ms var(--ease);
     }
     .topbar nav a:hover::after { transform: scaleX(1); }
+    .header-cta {
+      display: inline-block;
+      border: 1px solid var(--espresso);
+      border-radius: 999px;
+      background: var(--espresso);
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
     #home {
       position: relative;
@@ -151,12 +189,18 @@
       letter-spacing: -.06em;
       text-shadow: 0 2px 24px rgba(255,255,255,.5);
     }
+    .home-copy h1 .home-brand-script {
+      display: block;
+      color: var(--espresso);
+      font: 400 .68em/1 "Kaushan Script", cursive;
+      letter-spacing: 0;
+    }
     .home-copy h1 em {
       display: block;
       color: var(--caramel);
-      font-family: "Kaushan Script", cursive;
-      font-size: .48em;
-      letter-spacing: -.02em;
+      font: 400 .34em/1 "Alfa Slab One", Georgia, serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
     .home-copy p {
       max-width: 520px;
@@ -203,14 +247,14 @@
     .story-layout {
       position: relative;
       min-height: 100%;
-      --story-visual-height: calc(100svh - 76px);
+      --story-visual-height: calc(100svh - var(--header-height));
     }
     .story-visual {
       position: sticky;
-      top: 76px;
+      top: var(--header-height);
       z-index: 1;
       width: 100%;
-      height: calc(100svh - 76px);
+      height: calc(100svh - var(--header-height));
       display: grid;
       place-items: center;
       overflow: hidden;
@@ -304,70 +348,118 @@
 
     #story {
       padding: clamp(80px,10vw,128px) 0;
-      background: var(--cream);
-      border-top: 1px solid var(--line);
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(116,65,37,.22), transparent 70%),
+        #321d13;
+      border-top: 1px solid rgba(201,138,61,.16);
     }
     .editorial-grid {
       display: grid;
-      grid-template-columns: 5fr 7fr;
-      gap: clamp(40px,7vw,88px);
+      grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr);
+      gap: clamp(40px,5vw,72px);
       align-items: center;
     }
     .roastery-frame {
-      min-height: 520px;
-      display: grid;
-      place-items: center;
+      position: relative;
+      min-height: 578px;
+      padding: 38px 44px 30px;
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 16px;
+      border: 1px solid rgba(201,138,61,.34);
+      border-radius: 27px;
       background:
-        linear-gradient(145deg, rgba(201,138,61,.12), transparent),
-        var(--espresso);
-      box-shadow: 0 32px 70px rgba(40,21,11,.12);
+        radial-gradient(ellipse at 50% 44%, rgba(124,67,37,.25), transparent 56%),
+        linear-gradient(145deg,#351e14,#24130d);
+      box-shadow: 0 32px 70px rgba(10,5,2,.22);
     }
-    .roastery-frame svg { width: min(78%,360px); height: auto; }
+    .roastery-frame::before {
+      position: absolute;
+      top: -48px;
+      left: 50%;
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(201,138,61,.58);
+      border-radius: 50%;
+      content: "";
+      transform: translateX(-50%);
+    }
+    .roastery-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #b57a4c;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .roastery-illustration {
+      display: block;
+      width: min(100%,360px);
+      height: auto;
+      margin: 30px auto 28px;
+      overflow: visible;
+    }
+    .roastery-quote {
+      padding-top: 22px;
+      border-top: 1px solid rgba(201,138,61,.22);
+    }
+    .roastery-quote blockquote {
+      margin: 0;
+      color: #f7eee3;
+      font: italic 600 19px/1.35 Georgia,serif;
+    }
+    .roastery-quote p {
+      margin: 5px 0 0;
+      color: #b57a4c;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .story-copy { color: #d3c7bd; }
     .story-copy .eyebrow {
       margin: 0 0 12px;
-      color: var(--caramel);
+      color: #c98a55;
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: .18em;
+      letter-spacing: .22em;
       text-transform: uppercase;
     }
     .story-copy h2 {
       max-width: 650px;
       margin: 8px 0 20px;
-      color: var(--espresso);
-      font: 400 clamp(42px,5.5vw,72px)/1 Georgia, serif;
-      letter-spacing: -.045em;
+      color: #f8f0e7;
+      font: 600 clamp(46px,5.5vw,74px)/.92 "Cormorant Garamond",Georgia,serif;
+      letter-spacing: -.035em;
     }
-    .story-copy > p { max-width: 650px; color: var(--mute); }
+    .story-copy > p { max-width: 760px; color: #cfc3b8; font-size: 16px; }
+    .story-copy > p strong { color: #c98a55; font-weight: 700; }
     .counters {
       display: grid;
       grid-template-columns: repeat(3,1fr);
-      gap: 12px;
-      margin-top: 36px;
+      gap: 18px;
+      margin-top: 46px;
     }
     .counter-card {
-      min-height: 150px;
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--oat);
+      min-height: 168px;
+      padding: 26px 24px;
+      border: 1px solid rgba(201,138,61,.26);
+      border-radius: 18px;
+      background: linear-gradient(145deg,rgba(94,54,32,.42),rgba(67,39,25,.58));
     }
     .counter-value {
       display: block;
-      color: var(--caramel);
-      font: 400 clamp(34px,4vw,48px)/1 Georgia, serif;
+      color: #c98a55;
+      font: 700 clamp(38px,3.2vw,50px)/.92 "Cormorant Garamond",Georgia,serif;
     }
     .counter-card h3 {
-      margin: 18px 0 5px;
-      color: var(--espresso);
-      font-size: 11px;
+      margin: 10px 0 5px;
+      color: #d8c9bc;
+      font-size: 10px;
       letter-spacing: .12em;
       text-transform: uppercase;
     }
-    .counter-card p { margin: 0; color: var(--mute); font-size: 12px; }
+    .counter-card p { margin: 0; color: #aa9b90; font-size: 12px; line-height: 1.4; }
     .reveal {
       opacity: 1;
       transform: none;
@@ -391,13 +483,66 @@
     }
     @media (max-width:700px) {
       .shell { width:min(calc(100% - 32px),1180px); }
+      html { scroll-padding-bottom:calc(76px + env(safe-area-inset-bottom, 0px)); }
+      body { padding-bottom:calc(76px + env(safe-area-inset-bottom, 0px)); }
+      .topbar { backdrop-filter:none; }
+      .topbar .shell { padding-inline:5vw; }
+      .brand-mark-frame { width:53px; height:44px; }
       .home-copy { transform:translateY(-58px); }
       .story-layout { --story-visual-height:42svh; }
-      .topbar nav { gap:12px; }
-      .topbar nav a:first-child { display:none; }
+      .topbar nav {
+        position:fixed;
+        z-index:51;
+        top:auto;
+        right:0;
+        bottom:0;
+        left:0;
+        display:flex;
+        justify-content:space-around;
+        align-items:stretch;
+        padding:7px 8px calc(7px + env(safe-area-inset-bottom, 0px));
+        border-top:1px solid var(--line);
+        border-radius:16px 16px 0 0;
+        background:rgba(255,255,255,.94);
+        box-shadow:0 -12px 32px rgba(40,21,11,.12);
+        backdrop-filter:blur(16px);
+        overflow:hidden;
+      }
+      .topbar nav ul { width:min(100%,440px); justify-content:space-around; gap:0; margin-inline:auto; }
+      .topbar nav li { flex:1 1 0; }
+      .topbar nav li:first-child { order:2; }
+      .topbar nav li:nth-child(2) { order:1; }
+      .topbar nav li:nth-child(3) { order:3; }
+      .topbar nav a {
+        display:flex;
+        min-height:48px;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:3px;
+        padding:6px 4px;
+        font-size:15px;
+        font-weight:600;
+        text-align:center;
+      }
+      .mobile-nav-icon {
+        display:block;
+        width:19px;
+        height:19px;
+        stroke:currentColor;
+        stroke-width:1.7;
+        stroke-linecap:round;
+        stroke-linejoin:round;
+      }
+      .topbar nav a[aria-current="page"]::after {
+        right:25%;
+        bottom:2px;
+        left:25%;
+      }
+      .header-cta { display:none; }
       .home-copy h1 { font-size:clamp(48px,16vw,68px); }
       .story-visual {
-        top:76px;
+        top:var(--header-height);
         height:var(--story-visual-height);
         z-index:3;
         overflow:visible;
@@ -412,7 +557,7 @@
       }
       .story-stage-card {
         position:fixed;
-        top:calc(76px + var(--story-visual-height) + 58px);
+        top:calc(var(--header-height) + var(--story-visual-height) + 58px);
         right:16px;
         left:16px;
         max-width:100%;
@@ -452,9 +597,11 @@
       }
       .brand-mark-frame { width:53px; height:44px; }
       .brand { gap:7px; }
-      .editorial-grid { grid-template-columns:1fr; }
-      .roastery-frame { min-height:390px; }
-      .counters { grid-template-columns:1fr; }
+      .editorial-grid { grid-template-columns:minmax(0,1fr); }
+      .roastery-frame { min-height:460px; }
+      .roastery-illustration { width:min(72%,320px); }
+      .counters { gap:10px; }
+      .counter-card { padding:20px 16px; }
     }
     @media (prefers-reduced-motion:reduce) {
       html { scroll-behavior:auto; }
@@ -476,10 +623,13 @@
         </span>
       </a>
       <nav aria-label="Primary navigation">
-        <a href="/#menu">Menu</a>
-        <a href="/our-story.html">Our Story</a>
-        <a href="/#visit">Visit us</a>
+        <ul>
+          <li><a href="/#menu"><svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8h16l-1.3 11H5.3L4 8Z" /><path d="M8 8a4 4 0 0 1 8 0M20 11h1a2 2 0 0 1 0 4h-2" /></svg><span>Menu</span></a></li>
+          <li><a href="/our-story.html" aria-current="page"><svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.5c-2.2-1.7-5-2-8-1.5v13c3-.5 5.8-.2 8 1.5m0-13c2.2-1.7 5-2 8-1.5v13c-3-.5-5.8-.2-8 1.5m0-13v13" /></svg><span>Our Story</span></a></li>
+          <li><a href="/#visit"><svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.2" /></svg><span>Visit us</span></a></li>
+        </ul>
       </nav>
+      <a class="header-cta" href="/#visit">Find our café</a>
     </div>
   </header>
 
@@ -488,7 +638,7 @@
       <canvas id="homeCanvas" aria-hidden="true"></canvas>
       <div class="home-copy">
         <p class="eyebrow">Small-batch specialty coffee</p>
-        <h1>Krafted<em>Brews</em></h1>
+        <h1><span class="home-brand-script">krafted</span><em>BREWS</em></h1>
         <p>Slow-roasted. Hand-poured. Made with care in Bambang, Nueva Vizcaya.</p>
       </div>
       <a class="scroll-cue" href="#scroll-story">Scroll the craft</a>
@@ -540,42 +690,51 @@
 
     <section id="story">
       <div class="shell editorial-grid">
-        <div class="roastery-frame reveal" aria-label="Editorial coffee roastery illustration">
-          <svg viewBox="0 0 320 320" fill="none" role="img" aria-label="Coffee branch and roastery">
-            <circle cx="160" cy="160" r="138" stroke="#c98a3d" stroke-opacity=".35" />
-            <circle cx="160" cy="160" r="124" stroke="#c98a3d" stroke-opacity=".18" stroke-dasharray="4 6" />
-            <rect x="78" y="118" width="164" height="96" rx="18" fill="#573927" stroke="#c98a3d" stroke-width="2" />
-            <circle cx="160" cy="166" r="34" fill="#28150b" stroke="#c98a3d" stroke-width="2.5" />
-            <circle cx="160" cy="166" r="12" fill="#c98a3d" />
-            <path d="M132 76H188L174 118H146L132 76Z" fill="#c98a3d" stroke="#faf7f2" />
-            <rect x="94" y="222" width="132" height="22" rx="8" fill="#28150b" stroke="#c98a3d" stroke-width="1.8" />
-            <path d="M62 252C95 232 130 245 160 264" stroke="#c98a3d" stroke-width="2" />
-            <ellipse cx="96" cy="242" rx="11" ry="6" transform="rotate(-24 96 242)" fill="#c98a3d" />
-            <ellipse cx="128" cy="252" rx="11" ry="6" transform="rotate(18 128 252)" fill="#d8b27a" />
-            <circle cx="164" cy="265" r="6" fill="#c98a3d" />
-            <circle cx="176" cy="259" r="5" fill="#d8b27a" />
+        <div class="roastery-frame reveal" aria-label="Roastery batch profile and head roaster quote">
+          <div class="roastery-meta">
+            <span>Batch No. 048</span>
+            <span>45.5231° N, 122.6765° W</span>
+          </div>
+          <svg class="roastery-illustration" viewBox="0 0 360 340" fill="none" role="img" aria-label="Illustration of an artisan coffee roaster">
+            <circle cx="180" cy="170" r="145" stroke="#c98a3d" stroke-opacity=".36" stroke-width="1.5" />
+            <circle cx="180" cy="170" r="127" stroke="#c98a3d" stroke-opacity=".19" stroke-dasharray="4 7" />
+            <circle cx="340" cy="52" r="4.5" fill="#c98a3d" />
+            <path d="M143 72H217L199 122H161L143 72Z" fill="#b87945" stroke="#f8f0e7" stroke-width="1.5" />
+            <rect x="89" y="121" width="182" height="105" rx="20" fill="#4a2a19" stroke="#c98a3d" stroke-width="2" />
+            <circle cx="180" cy="174" r="39" fill="#2a170f" stroke="#b8733e" stroke-width="3" />
+            <circle cx="180" cy="174" r="13" fill="#c98a3d" />
+            <rect x="103" y="235" width="154" height="24" rx="9" fill="#2a170f" stroke="#b8733e" stroke-width="2" />
+            <path d="M70 269C96 248 122 254 151 278" stroke="#c98a3d" stroke-width="2" />
+            <ellipse cx="109" cy="259" rx="12" ry="7" transform="rotate(-22 109 259)" fill="#b87945" />
+            <ellipse cx="145" cy="270" rx="12" ry="7" transform="rotate(18 145 270)" fill="#d8b27a" />
+            <circle cx="184" cy="283" r="7" fill="#b87945" />
+            <circle cx="198" cy="276" r="6" fill="#d8b27a" />
           </svg>
+          <div class="roastery-quote">
+            <blockquote>“Patience is our primary roast profile.”</blockquote>
+            <p>Julian Vance — Head Roaster</p>
+          </div>
         </div>
         <article class="story-copy reveal">
           <p class="eyebrow">Our Philosophy</p>
-          <h2>Crafted by hand, guided by origin.</h2>
-          <p>Krafted Brews is a specialty coffee house in Bambang, Nueva Vizcaya, built around thoughtful coffee, fresh bakes and unhurried moments.</p>
-          <p>Every part of the experience—from the first roast to the last pour—is shaped with patience, care and a sense of place.</p>
+          <h2>Crafted by Hand, Guided by Origin.</h2>
+          <p>At <strong>KRAFTED BREWS</strong>, we partner directly with high-altitude family estates across Ethiopia, Colombia, and Guatemala—paying well above fair-trade minimums for microlots harvested at peak ripeness.</p>
+          <p>Back at our roastery, every batch is profiled curve-by-curve in small cast-iron drums and rested for optimal degassing before our baristas dial in each extraction by weight, temperature, and sensory balance.</p>
           <div class="counters">
             <article class="counter-card">
-              <span class="counter-value" data-target="4">0</span>
-              <h3>Craft Stages</h3>
-              <p>One story, from bean to cup</p>
+              <span class="counter-value" data-target="12">0</span>
+              <h3>Single Origins</h3>
+              <p>Seasonal high-altitude microlots</p>
             </article>
             <article class="counter-card">
-              <span class="counter-value" data-target="500">0</span>
-              <h3>Millilitres</h3>
-              <p>Ready-to-drink Kold Brew size</p>
+              <span class="counter-value" data-target="48" data-suffix="-Hr">0</span>
+              <h3>Cold Brew Steep</h3>
+              <p>Slow-filtered Kyoto &amp; immersion</p>
             </article>
             <article class="counter-card">
-              <span class="counter-value" data-target="1">0</span>
-              <h3>Local Café</h3>
-              <p>Bambang, Nueva Vizcaya</p>
+              <span class="counter-value" data-target="100" data-suffix="%">0</span>
+              <h3>Ethically Sourced</h3>
+              <p>Transparent farm-gate partnerships</p>
             </article>
           </div>
         </article>
@@ -832,8 +991,11 @@
 
       var homeCanvas = document.getElementById("homeCanvas");
       var homeRenderer, homeScene, homeCamera, homeCup, homeCremaSurface, homeCremaLight;
+      var mobile3D = matchMedia("(max-width:700px), (pointer:coarse)").matches;
+      var mobileFrameInterval = mobile3D ? 1000/30 : 0;
       var homeCupBaseY = innerWidth < 700 ? -1.2 : -.95;
-      var homeBeanOrbitScale = innerWidth < 700 ? .82 : 1;
+      var homeBeanOrbitScale = 1;
+      var homeHandoffProgress = 0;
       var pointer = { x:0, y:0 };
       addEventListener("pointermove", function (event) {
         pointer.x = event.clientX / innerWidth * 2 - 1;
@@ -842,7 +1004,7 @@
 
       if (homeCanvas) {
         homeRenderer = new T.WebGLRenderer({ canvas:homeCanvas, alpha:true, antialias:true });
-        homeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+        homeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
         homeScene = new T.Scene();
         homeCamera = new T.PerspectiveCamera(38,1,.1,60);
         homeCamera.position.set(0,.8,7.2);
@@ -917,7 +1079,7 @@
           homeCup.add(steam);
           homeSteam.push(steam);
         }
-        homeCup.scale.setScalar(.58);
+        homeCup.scale.setScalar(.82);
         homeCup.position.y = homeCupBaseY;
         homeScene.add(homeCup);
       }
@@ -925,30 +1087,40 @@
       function fitHome() {
         if (!homeRenderer) return;
         var rect = homeCanvas.getBoundingClientRect();
-        homeRenderer.setSize(rect.width,rect.height,false);
-        homeCamera.aspect = rect.width / rect.height;
+        var width = homeCanvas.clientWidth || rect.width;
+        var height = homeCanvas.clientHeight || rect.height;
+        homeRenderer.setSize(width,height,false);
+        homeCamera.aspect = width / height;
         homeCamera.updateProjectionMatrix();
-        homeCupBaseY = rect.width < 700 ? -1.2 : -.95;
-        homeBeanOrbitScale = rect.width < 700 ? .82 : 1;
-        if (homeCup && reduce) homeCup.position.y = homeCupBaseY;
+        homeCupBaseY = width < 700 ? -1.2 : -.95;
+        homeBeanOrbitScale = 1;
+        if (homeCup && reduce) homeCup.position.y = homeCupBaseY * (1-homeHandoffProgress);
       }
       if (homeRenderer) {
         fitHome();
         addEventListener("resize",fitHome);
         var homeClock = new T.Clock();
+        var homeVisible = true;
+        new IntersectionObserver(function(entries){homeVisible=entries[0].isIntersecting;}).observe(document.getElementById("home"));
+        var lastHomeFrame = 0;
         function animateHome() {
           requestAnimationFrame(animateHome);
+          var now=performance.now();
+          if(mobileFrameInterval&&now-lastHomeFrame<mobileFrameInterval)return;
+          lastHomeFrame=now;
+          if(!homeVisible&&homeHandoffProgress>=1)return;
           if (!reduce) {
             var elapsed = homeClock.getElapsedTime();
-            homeCremaSurface.texture.rotation = elapsed * Math.PI * 2 / 25;
+            homeCremaSurface.texture.rotation = elapsed * (Math.PI * 2 / 25 - .22);
             homeCremaSurface.texture.offset.set(
               Math.sin(elapsed * .7) * .0015,
               Math.cos(elapsed * .7) * .0015
             );
             homeCremaLight.intensity = .5 + Math.sin(elapsed * 1.1) * .025;
-            homeCup.rotation.y += (pointer.x*.22-homeCup.rotation.y)*.04;
-            homeCup.rotation.x += (pointer.y*.10-homeCup.rotation.x)*.04;
-            homeCup.position.y = homeCupBaseY + Math.sin(elapsed*1.1)*.08;
+            var homeCupRotationY = pointer.x*.38 + elapsed*.22*homeHandoffProgress;
+            homeCup.rotation.y += (homeCupRotationY-homeCup.rotation.y)*.04;
+            homeCup.rotation.x += (pointer.y*.22-homeCup.rotation.x)*.04;
+            homeCup.position.y = homeCupBaseY*(1-homeHandoffProgress) + Math.sin(elapsed*1.1)*.08;
             homeBeans.forEach(function (bean) {
               var angle = bean.userData.angle + elapsed * bean.userData.speed;
               bean.position.set(
@@ -977,8 +1149,9 @@
       }
 
       var canvas = document.getElementById("storyCanvas");
+      canvas.style.opacity = "0";
       var renderer = new T.WebGLRenderer({ canvas:canvas, alpha:true, antialias:true });
-      renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+      renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
       renderer.shadowMap.enabled = true;
       renderer.toneMapping = T.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
@@ -993,47 +1166,27 @@
 
       var master = new T.Group();
       scene.add(master);
-      var ceramicMat = new T.MeshStandardMaterial({color:0xf5ebdd,roughness:.34,metalness:.04});
-      var roastedMat = new T.MeshStandardMaterial({color:0x4a2c1a,roughness:.42,metalness:.08});
+      var ceramicMat = ceramic;
+      var roastedMat = roasted;
       var copperMat = new T.MeshStandardMaterial({color:0xb8733e,roughness:.26,metalness:.86});
       var caramelMat = new T.MeshStandardMaterial({color:0xc98a3d,roughness:.32,metalness:.12});
       var glassMat = new T.MeshPhysicalMaterial({color:0xf5ebdd,transparent:true,opacity:.36,roughness:.12,metalness:.05});
 
-      var stage1 = new T.Group();
+      var stage1 = homeCup.clone(true);
+      stage1.position.set(0,0,0);
+      stage1.rotation.set(0,0,0);
+      stage1.scale.setScalar(.82);
       master.add(stage1);
-      stage1.add(lathe([[0,-.78],[.85,-.78],[1.48,-.62],[1.52,-.57],[.82,-.71],[0,-.71]],ceramicMat));
-      stage1.add(lathe([[0,-.70],[.62,-.70],[.88,-.22],[.98,.45],[.91,.45],[.81,-.20],[.56,-.62],[0,-.62]],ceramicMat));
-      var handleCurve=new T.CatmullRomCurve3([
-        new T.Vector3(.92,.28,0),new T.Vector3(1.36,.25,0),
-        new T.Vector3(1.34,-.22,0),new T.Vector3(.84,-.28,0)
-      ]);
-      stage1.add(new T.Mesh(new T.TubeGeometry(handleCurve,24,.085,16,false),ceramicMat));
-      var innerRim=new T.Mesh(
-        new T.TorusGeometry(.91,.055,16,64),
-        new T.MeshStandardMaterial({color:0xfaf2e4,roughness:.22,metalness:.02})
-      );
-      innerRim.rotation.x=Math.PI/2;
-      innerRim.position.y=.46;
-      stage1.add(innerRim);
-      var storyCremaSurface=createCremaSurface();
+      var storyCremaSurface=homeCremaSurface;
       var storyCremaLight=new T.PointLight(0xffd49a,.5,6);
       storyCremaLight.position.set(0,2.1,2);
       scene.add(storyCremaLight);
-      stage1.add(storyCremaSurface.surface,storyCremaSurface.rim);
-      var beanGeom=createCoffeeBeanGeometry(18), heroBeans=[];
-      for(var i=0;i<8;i++){
-        var bean=new T.Mesh(beanGeom,roastedMat), angle=i/8*Math.PI*2, radius=1.65+(i%3)*.28;
-        bean.scale.setScalar(.18+(i%2)*.05);
-        bean.userData={angle:angle,radius:radius,baseY:-.25+(i%4)*.32,speed:.35+(i%3)*.12};
-        stage1.add(bean); heroBeans.push(bean);
-      }
-      var steamTexture=createSteamTexture(), steamSprites=[];
-      for(var s=0;s<28;s++){
-        var sm=new T.SpriteMaterial({map:steamTexture,transparent:true,opacity:0,depthWrite:false});
-        var sprite=new T.Sprite(sm);
-        sprite.userData={phase:s/28,offsetX:(Math.random()-.5)*.65,offsetZ:(Math.random()-.5)*.65,swirl:.6+Math.random()*.8};
-        stage1.add(sprite); steamSprites.push(sprite);
-      }
+      var heroBeans=[];
+      var steamSprites=[];
+      stage1.children.forEach(function(child){
+        if(typeof child.userData.speed==="number")heroBeans.push(child);
+        if(typeof child.userData.phase==="number")steamSprites.push(child);
+      });
 
       var stage2=new T.Group(); stage2.visible=false; master.add(stage2);
       var leftHalf=new T.Mesh(createHalfBeanGeometry(-1,26),roastedMat);
@@ -1089,7 +1242,7 @@
       function fit() {
         var rect=canvas.getBoundingClientRect();
         if(!rect.width||!rect.height)return;
-        renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+        renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
         renderer.setSize(rect.width,rect.height,false);
         camera.position.y=rect.width<700?2.5:1.35;
         camera.lookAt(0,0,0);
@@ -1102,10 +1255,14 @@
       var storyState={stageProgress:0};
       var clock=new T.Clock();
       var visible=true;
+      var lastStoryFrame=0;
       new IntersectionObserver(function(entries){visible=entries[0].isIntersecting},{threshold:.02}).observe(document.getElementById("scroll-story"));
       function animate() {
         requestAnimationFrame(animate);
         if(!visible)return;
+        var now=performance.now();
+        if(mobileFrameInterval&&now-lastStoryFrame<mobileFrameInterval)return;
+        lastStoryFrame=now;
         var elapsed=clock.getElapsedTime();
         master.rotation.y+=(pointerNorm.x*.38-master.rotation.y)*.05;
         master.rotation.x+=(pointerNorm.y*.22-master.rotation.x)*.05;
@@ -1179,9 +1336,69 @@
           chapter.classList.toggle("active",storyVisible&&index===activeIndex);
         });
       }
-      addEventListener("scroll",updateStoryStage,{passive:true});
-      addEventListener("resize",updateStoryStage);
+      var homeSection=document.getElementById("home");
+      var storyVisual=document.querySelector(".story-visual");
+      var homePlaceholder=null;
+      function updateCoffeeHandoff(){
+        if(!homeCanvas||!homeSection||!storyVisual)return;
+        var headerHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height"))||82;
+        var homeTop=homeSection.getBoundingClientRect().top+scrollY;
+        var storyTop=storySection.getBoundingClientRect().top+scrollY;
+        var handoffEnd=Math.max(homeTop+1,storyTop-headerHeight);
+        var rawProgress=Math.max(0,Math.min(1,(scrollY-homeTop)/(handoffEnd-homeTop)));
+        var progress=reduce?rawProgress:rawProgress*rawProgress*(3-2*rawProgress);
+        homeHandoffProgress=progress;
+        if(reduce&&homeCup)homeCup.position.y=homeCupBaseY*(1-progress);
+        var sourceHeight=homeSection.clientHeight;
+        var targetHeight=storyVisual.getBoundingClientRect().height;
+        var targetScale=targetHeight/sourceHeight;
+        var targetShift=innerWidth>700?innerWidth*.26:0;
+        var blend=Math.max(0,Math.min(1,(progress-.68)/.32));
+
+        canvas.style.opacity=String(blend);
+        if(rawProgress===0){
+          if(homePlaceholder&&homePlaceholder.parentNode){
+            homePlaceholder.parentNode.insertBefore(homeCanvas,homePlaceholder);
+            homePlaceholder.remove();
+            homePlaceholder=null;
+          }
+          ["position","left","top","right","bottom","width","height","opacity","pointer-events","z-index","transform","transform-origin"].forEach(function(property){
+            homeCanvas.style.removeProperty(property);
+          });
+          fitHome();
+          return;
+        }
+
+        if(!homePlaceholder){
+          homePlaceholder=document.createComment("home coffee handoff");
+          homeCanvas.parentNode.insertBefore(homePlaceholder,homeCanvas);
+          document.body.appendChild(homeCanvas);
+        }
+        var sourceTop=homeTop-scrollY;
+        homeCanvas.style.position="fixed";
+        homeCanvas.style.left="0";
+        homeCanvas.style.top=(sourceTop+(headerHeight-sourceTop)*progress)+"px";
+        homeCanvas.style.right="auto";
+        homeCanvas.style.bottom="auto";
+        homeCanvas.style.width=homeSection.clientWidth+"px";
+        homeCanvas.style.height=sourceHeight+"px";
+        homeCanvas.style.opacity=String(1-blend);
+        homeCanvas.style.pointerEvents="none";
+        homeCanvas.style.zIndex="5";
+        homeCanvas.style.transformOrigin="top left";
+        homeCanvas.style.transform="translateX("+(targetShift*progress)+"px) scaleY("+(1+(targetScale-1)*progress)+")";
+      }
+      addEventListener("scroll",function(){
+        updateStoryStage();
+        updateCoffeeHandoff();
+      },{passive:true});
+      addEventListener("resize",function(){
+        fitHome();
+        updateStoryStage();
+        updateCoffeeHandoff();
+      });
       updateStoryStage();
+      updateCoffeeHandoff();
       if(!reduce){
         gsap.utils.toArray(".reveal").forEach(function(el){
           gsap.set(el,{y:0,opacity:1});
@@ -1190,10 +1407,11 @@
 
       document.querySelectorAll(".counter-value").forEach(function(counter){
         var target=Number(counter.dataset.target||0);
-        if(reduce){counter.textContent=target;return;}
+        var suffix=counter.dataset.suffix||"";
+        if(reduce){counter.textContent=target+suffix;return;}
         ScrollTrigger.create({trigger:counter,start:"top 88%",once:true,onEnter:function(){
           var obj={value:0};
-          gsap.to(obj,{value:target,duration:1.7,ease:"power2.out",onUpdate:function(){counter.textContent=Math.round(obj.value);}});
+          gsap.to(obj,{value:target,duration:1.7,ease:"power2.out",onUpdate:function(){counter.textContent=Math.round(obj.value)+suffix;}});
         }});
       });
 

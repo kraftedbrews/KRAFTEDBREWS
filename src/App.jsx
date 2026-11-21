@@ -24,13 +24,30 @@ export default function App() {
         </a>
         <ul id="primaryNav">
           <li>
-            <a href="#menu">Menu</a>
+            <a href="#menu">
+              <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 8h16l-1.3 11H5.3L4 8Z" />
+                <path d="M8 8a4 4 0 0 1 8 0M20 11h1a2 2 0 0 1 0 4h-2" />
+              </svg>
+              <span>Menu</span>
+            </a>
           </li>
           <li>
-            <a href="/our-story.html" id="storyLink">Our Story</a>
+            <a href="/our-story.html" id="storyLink">
+              <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 6.5c-2.2-1.7-5-2-8-1.5v13c3-.5 5.8-.2 8 1.5m0-13c2.2-1.7 5-2 8-1.5v13c-3-.5-5.8-.2-8 1.5m0-13v13" />
+              </svg>
+              <span>Our Story</span>
+            </a>
           </li>
           <li>
-            <a href="#visit">Visit us</a>
+            <a href="#visit">
+              <svg className="mobile-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+                <circle cx="12" cy="10" r="2.2" />
+              </svg>
+              <span>Visit us</span>
+            </a>
           </li>
         </ul>
         <a className="btn mag" style={{ padding: "10px 20px" }} href="#visit">
@@ -66,6 +83,10 @@ export default function App() {
             <a className="gcard" href="#visit">
               <b>Find Our Café</b>
               <span>Hours, seating and directions</span>
+            </a>
+            <a className="gcard" href="/our-story.html">
+              <b>Our Story</b>
+              <span>Meet the people and purpose behind every cup</span>
             </a>
           </div>
         </div>
@@ -241,7 +262,9 @@ export default function App() {
           </div>
         </div>
         <div className="wrap">
-          <h2>The menu</h2>
+          <h2>
+            <span className="script">Menu</span>
+          </h2>
           <p className="lead">
             Everything is made to order. Tasting notes first, because that is
             how we choose too.

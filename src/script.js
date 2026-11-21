@@ -684,9 +684,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
   scheduleShowcaseRotation();
   /* ---------- 3D helpers ---------- */
+  var mobile3D = matchMedia("(max-width: 700px), (pointer: coarse)").matches;
+  var mobileFrameInterval = mobile3D ? 1000 / 30 : 0;
   function mk(cv) {
     var r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
-    r.setPixelRatio(Math.min(devicePixelRatio, 2));
+    r.setPixelRatio(Math.min(devicePixelRatio, mobile3D ? 1.35 : 2));
     r.outputColorSpace = T.SRGBColorSpace;
     r.toneMapping = T.ACESFilmicToneMapping;
     r.toneMappingExposure = 1.05;
@@ -1320,7 +1322,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           g.add(spokeMesh);
         }
 
-        g.rotation.x = -0.72;
+        g.rotation.x = 0.72;
         g.position.y = -0.12;
         g.scale.setScalar(1.05);
         return g;
@@ -1647,8 +1649,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       showcaseVisible = entry.isIntersecting;
     });
   }).observe(showcase);
+  var last3DFrame = 0;
   function loop() {
     requestAnimationFrame(loop);
+    var now = performance.now();
+    if (mobileFrameInterval && now - last3DFrame < mobileFrameInterval) return;
+    last3DFrame = now;
     if (vis.h) {
       if (!heroDragging) {
         heroRotation.velocity *= 0.94;
