@@ -1092,6 +1092,9 @@ nav ul a.active::after {
   font-weight: 600;
   letter-spacing: -0.025em;
 }
+.hero-copy h1 .script {
+  color: var(--caramel);
+}
 .hero-copy p {
   color: var(--mute);
   max-width: 44ch;

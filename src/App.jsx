@@ -113,7 +113,7 @@ export default function App() {
         </div>
         <div className="hero-copy" id="hc">
           <h1>
-            <span className="script">Crafted slowly</span>. Poured with
+            <span className="script">Crafted slowly.</span> Poured with
             purpose.
           </h1>
           <div className="cards">
