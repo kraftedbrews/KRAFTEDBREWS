@@ -334,10 +334,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     if (event.target === productDialog) productDialog.close();
   });
   var promoDialog = $("promoDialog"),
-    promoBookmark = $("promoBookmark"),
+    promoTrigger = $("promoTrigger"),
     promoDialogClose = $("promoDialogClose");
-  if (promoDialog && promoBookmark && promoDialogClose) {
-    promoBookmark.addEventListener("click", function () {
+  if (promoDialog && promoTrigger && promoDialogClose) {
+    promoTrigger.addEventListener("click", function () {
       promoDialog.showModal();
     });
     promoDialogClose.addEventListener("click", function () {

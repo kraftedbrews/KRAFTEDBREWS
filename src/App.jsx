@@ -81,21 +81,18 @@ export default function App() {
           Find our café
         </a>
         <button
-          className="promo-bookmark"
-          id="promoBookmark"
+          className="promo-ticket"
+          id="promoTrigger"
           type="button"
-          aria-label="Open the Match Your Bill promo"
+          aria-label="Open the Match Your Bill promo for 50% off"
           aria-controls="promoDialog"
-          title="A little coffee surprise"
+          title="See the Match Your Bill promo"
         >
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M7 4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V21l-5-3.5L7 21V4.5Z"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className="promo-ticket-symbol" aria-hidden="true">%</span>
+          <span className="promo-ticket-copy">
+            <span>PROMO</span>
+            <strong>50% OFF</strong>
+          </span>
         </button>
       </nav>
 
@@ -257,7 +254,7 @@ export default function App() {
       >
         <div className="promo-dialog-heading">
           <div>
-            <p className="home-promo-eyebrow">A little surprise</p>
+            <p className="promo-eyebrow">A little surprise</p>
             <h2 id="promoDialogTitle">
               <span className="script">Match your bill.</span>
               <br />
@@ -421,45 +418,6 @@ export default function App() {
               Read our story <span aria-hidden="true">↗</span>
             </a>
           </div>
-        </div>
-      </section>
-
-      <section
-        className="home-promo"
-        aria-labelledby="homePromoHeading"
-      >
-        <div className="wrap">
-          <div className="home-promo-intro">
-            <div>
-              <p className="home-promo-eyebrow">Promo</p>
-              <h2 className="home-promo-heading" id="homePromoHeading">
-                <span className="script">Match your bill.</span>
-                <br />
-                Get 50% off.
-              </h2>
-            </div>
-            <p className="home-promo-copy">
-              One try per receipt. Match the timer to your bill and get 50% off
-              your order.
-            </p>
-          </div>
-          <ul
-            className="home-promo-gallery"
-            aria-label="Photos from the Match Your Bill promotion"
-          >
-            {promoImages.map((image) => (
-              <li key={image.src}>
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  width="768"
-                  height="960"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
