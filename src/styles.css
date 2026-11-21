@@ -1429,6 +1429,7 @@ h2 {
     top: 3%;
     width: min(76vw, 370px);
     height: 75%;
+    cursor: default;
   }
   .menu-bean-one {
     left: 8%;

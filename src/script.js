@@ -1598,43 +1598,46 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   setFeaturedProduct(featuredBrews[featuredBrewIndex].model);
 
   var menuCanvas = $("menuCv");
-  menuCanvas.addEventListener("pointerdown", function (event) {
-    menuDragging = true;
-    menuDragX = event.clientX;
-    menuDragY = event.clientY;
-    menuRotation.velocity = 0;
-    menuCanvas.setPointerCapture(event.pointerId);
-  });
-  menuCanvas.addEventListener("pointermove", function (event) {
-    if (!menuDragging) return;
-    var deltaX = event.clientX - menuDragX;
-    var deltaY = event.clientY - menuDragY;
-    menuRotation.y += deltaX * 0.012;
-    menuRotation.x += deltaY * 0.008;
-    menuRotation.x = Math.max(-0.45, Math.min(0.45, menuRotation.x));
-    menuRotation.velocity = deltaX * 0.001;
-    menuDragX = event.clientX;
-    menuDragY = event.clientY;
-  });
-  function stopMenuDrag(event) {
-    menuDragging = false;
-    if (event && menuCanvas.hasPointerCapture(event.pointerId)) {
-      menuCanvas.releasePointerCapture(event.pointerId);
+  var menuAutoRotation = mobile3D && !reduce ? 0.008 : 0;
+  if (!mobile3D) {
+    menuCanvas.addEventListener("pointerdown", function (event) {
+      menuDragging = true;
+      menuDragX = event.clientX;
+      menuDragY = event.clientY;
+      menuRotation.velocity = 0;
+      menuCanvas.setPointerCapture(event.pointerId);
+    });
+    menuCanvas.addEventListener("pointermove", function (event) {
+      if (!menuDragging) return;
+      var deltaX = event.clientX - menuDragX;
+      var deltaY = event.clientY - menuDragY;
+      menuRotation.y += deltaX * 0.012;
+      menuRotation.x += deltaY * 0.008;
+      menuRotation.x = Math.max(-0.45, Math.min(0.45, menuRotation.x));
+      menuRotation.velocity = deltaX * 0.001;
+      menuDragX = event.clientX;
+      menuDragY = event.clientY;
+    });
+    function stopMenuDrag(event) {
+      menuDragging = false;
+      if (event && menuCanvas.hasPointerCapture(event.pointerId)) {
+        menuCanvas.releasePointerCapture(event.pointerId);
+      }
     }
+    menuCanvas.addEventListener("pointerup", stopMenuDrag);
+    menuCanvas.addEventListener("pointercancel", stopMenuDrag);
+    menuCanvas.addEventListener(
+      "wheel",
+      function (event) {
+        event.preventDefault();
+        menuDistanceTarget = Math.min(
+          7,
+          Math.max(3.8, menuDistanceTarget + event.deltaY * 0.004),
+        );
+      },
+      { passive: false },
+    );
   }
-  menuCanvas.addEventListener("pointerup", stopMenuDrag);
-  menuCanvas.addEventListener("pointercancel", stopMenuDrag);
-  menuCanvas.addEventListener(
-    "wheel",
-    function (event) {
-      event.preventDefault();
-      menuDistanceTarget = Math.min(
-        7,
-        Math.max(3.8, menuDistanceTarget + event.deltaY * 0.004),
-      );
-    },
-    { passive: false },
-  );
 
   /* ---------- loop ---------- */
   var vis = { h: true, m: false };
@@ -1682,7 +1685,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     if (vis.m) {
       if (!menuDragging) {
         menuRotation.velocity *= 0.94;
-        menuRotation.y += menuRotation.velocity;
+        menuRotation.y += menuRotation.velocity + menuAutoRotation;
       }
       menuDistance += (menuDistanceTarget - menuDistance) * 0.1;
       M.c.position.set(0, 0.12, menuDistance);
