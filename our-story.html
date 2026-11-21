@@ -512,7 +512,7 @@
         border-radius:16px 16px 0 0;
         background:rgba(255,255,255,.94);
         box-shadow:0 -12px 32px rgba(40,21,11,.12);
-        backdrop-filter:blur(16px);
+        backdrop-filter:none;
         overflow:hidden;
       }
       .topbar nav ul { width:min(100%,440px); justify-content:space-around; gap:0; margin-inline:auto; }
@@ -823,9 +823,14 @@
 
       function createCremaTexture() {
         var canvas = document.createElement("canvas");
-        canvas.width = canvas.height = 512;
+        var textureSize = mobile3D ? 256 : 512;
+        canvas.width = canvas.height = textureSize;
         var ctx = canvas.getContext("2d");
+        ctx.scale(textureSize / 512, textureSize / 512);
         var center = 256;
+        var stripeCount = mobile3D ? 12 : 16;
+        var stripeSteps = mobile3D ? 32 : 64;
+        var spiralSteps = mobile3D ? 160 : 320;
         var gradient = ctx.createRadialGradient(218,198,8,center,center,252);
         gradient.addColorStop(0,"#C8893F");
         gradient.addColorStop(.38,"#C8893F");
@@ -839,11 +844,11 @@
         ctx.save();
         ctx.translate(center,center);
         ctx.lineCap = "round";
-        for (var stripe = 0; stripe < 16; stripe++) {
-          var baseAngle = stripe / 16 * Math.PI * 2;
+        for (var stripe = 0; stripe < stripeCount; stripe++) {
+          var baseAngle = stripe / stripeCount * Math.PI * 2;
           ctx.beginPath();
-          for (var step = 0; step <= 64; step++) {
-            var t = step / 64;
+          for (var step = 0; step <= stripeSteps; step++) {
+            var t = step / stripeSteps;
             var radius = 142 + t * 100;
             var angle = baseAngle + t * .24 + Math.sin(t * 11 + stripe) * .035;
             var x = Math.cos(angle) * radius;
@@ -861,8 +866,8 @@
         }
 
         ctx.beginPath();
-        for (var spiralStep = 0; spiralStep <= 320; spiralStep++) {
-          var spiralT = spiralStep / 320;
+        for (var spiralStep = 0; spiralStep <= spiralSteps; spiralStep++) {
+          var spiralT = spiralStep / spiralSteps;
           var spiralAngle = spiralT * Math.PI * 5.2;
           var spiralRadius = 5 + spiralT * 205;
           var spiralX = Math.cos(spiralAngle) * spiralRadius;
@@ -892,7 +897,8 @@
         ctx.fillRect(-190,-20,380,40);
         ctx.restore();
 
-        for (var bubble = 0; bubble < 190; bubble++) {
+        var bubbleCount = mobile3D ? 64 : 190;
+        for (var bubble = 0; bubble < bubbleCount; bubble++) {
           var bubbleAngle = Math.random() * Math.PI * 2;
           var bubbleRadius = 176 + Math.random() * 68;
           var bubbleSize = .8 + Math.random() * 2.4;
@@ -1004,6 +1010,7 @@
       var homeRenderer, homeScene, homeCamera, homeCup, homeCremaSurface, homeCremaLight;
       var mobile3D = matchMedia("(max-width:700px), (pointer:coarse)").matches;
       var mobileFrameInterval = mobile3D ? 1000/30 : 0;
+      var scheduleHomeFrame = null;
       var homeCupBaseY = innerWidth < 700 ? -1.2 : -.95;
       var homeBeanOrbitScale = 1;
       var homeHandoffProgress = 0;
@@ -1014,8 +1021,8 @@
       });
 
       if (homeCanvas) {
-        homeRenderer = new T.WebGLRenderer({ canvas:homeCanvas, alpha:true, antialias:true });
-        homeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
+        homeRenderer = new T.WebGLRenderer({ canvas:homeCanvas, alpha:true, antialias:!mobile3D });
+        homeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.1:2));
         homeScene = new T.Scene();
         homeCamera = new T.PerspectiveCamera(38,1,.1,60);
         homeCamera.position.set(0,.8,7.2);
@@ -1057,9 +1064,10 @@
         homeCup.add(homeCremaSurface.surface,homeCremaSurface.rim);
         var beanGeometry = createCoffeeBeanGeometry(18);
         var homeBeans = [];
-        for (var i = 0; i < 8; i++) {
+        var homeBeanCount = mobile3D ? 6 : 8;
+        for (var i = 0; i < homeBeanCount; i++) {
           var bean = new T.Mesh(beanGeometry, roasted);
-          var angle = i / 8 * Math.PI * 2;
+          var angle = i / homeBeanCount * Math.PI * 2;
           var radius = 1.65 + (i % 3) * .28;
           bean.scale.setScalar(.18 + (i % 2) * .05);
           bean.userData = {
@@ -1073,7 +1081,8 @@
         }
         var steamTexture = createSteamTexture();
         var homeSteam = [];
-        for (var s = 0; s < 28; s++) {
+        var homeSteamCount = mobile3D ? 14 : 28;
+        for (var s = 0; s < homeSteamCount; s++) {
           var steamMaterial = new T.SpriteMaterial({
             map: steamTexture,
             transparent: true,
@@ -1082,7 +1091,7 @@
           });
           var steam = new T.Sprite(steamMaterial);
           steam.userData = {
-            phase: s / 28,
+            phase: s / homeSteamCount,
             offsetX: (Math.random() - .5) * .65,
             offsetZ: (Math.random() - .5) * .65,
             swirl: .6 + Math.random() * .8,
@@ -1113,14 +1122,21 @@
         addEventListener("resize",fitHome);
         var homeClock = new T.Clock();
         var homeVisible = true;
-        new IntersectionObserver(function(entries){homeVisible=entries[0].isIntersecting;}).observe(document.getElementById("home"));
+        var homeFramePending = false;
+        new IntersectionObserver(function(entries){
+          homeVisible=entries[0].isIntersecting;
+          if(scheduleHomeFrame)scheduleHomeFrame();
+        }).observe(document.getElementById("home"));
         var lastHomeFrame = 0;
         function animateHome() {
-          requestAnimationFrame(animateHome);
+          homeFramePending = false;
+          if(document.hidden||(!homeVisible&&homeHandoffProgress>=1))return;
           var now=performance.now();
-          if(mobileFrameInterval&&now-lastHomeFrame<mobileFrameInterval)return;
+          if(mobileFrameInterval&&now-lastHomeFrame<mobileFrameInterval){
+            scheduleHomeFrame();
+            return;
+          }
           lastHomeFrame=now;
-          if(!homeVisible&&homeHandoffProgress>=1)return;
           if (!reduce) {
             var elapsed = homeClock.getElapsedTime();
             homeCremaSurface.texture.rotation = elapsed * (Math.PI * 2 / 25 - .22);
@@ -1156,15 +1172,22 @@
             });
           }
           homeRenderer.render(homeScene,homeCamera);
+          scheduleHomeFrame();
         }
-        animateHome();
+        scheduleHomeFrame=function(){
+          if(homeFramePending||document.hidden||(!homeVisible&&homeHandoffProgress>=1))return;
+          homeFramePending=true;
+          requestAnimationFrame(animateHome);
+        };
+        document.addEventListener("visibilitychange",scheduleHomeFrame);
+        scheduleHomeFrame();
       }
 
       var canvas = document.getElementById("storyCanvas");
       canvas.style.opacity = "0";
-      var renderer = new T.WebGLRenderer({ canvas:canvas, alpha:true, antialias:true });
-      renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
-      renderer.shadowMap.enabled = true;
+      var renderer = new T.WebGLRenderer({ canvas:canvas, alpha:true, antialias:!mobile3D });
+      renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.1:2));
+      renderer.shadowMap.enabled = !mobile3D;
       renderer.toneMapping = T.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
       var scene = new T.Scene();
@@ -1254,7 +1277,7 @@
       function fit() {
         var rect=canvas.getBoundingClientRect();
         if(!rect.width||!rect.height)return;
-        renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.35:2));
+        renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.1:2));
         renderer.setSize(rect.width,rect.height,false);
         camera.position.y=rect.width<700?2.5:1.35;
         camera.lookAt(0,0,0);
@@ -1266,14 +1289,26 @@
 
       var storyState={stageProgress:0};
       var clock=new T.Clock();
-      var visible=true;
+      var visible=false;
+      var storyFramePending=false;
       var lastStoryFrame=0;
-      new IntersectionObserver(function(entries){visible=entries[0].isIntersecting},{threshold:.02}).observe(document.getElementById("scroll-story"));
-      function animate() {
+      function scheduleStoryFrame(){
+        if(!visible||storyFramePending||document.hidden)return;
+        storyFramePending=true;
         requestAnimationFrame(animate);
-        if(!visible)return;
+      }
+      new IntersectionObserver(function(entries){
+        visible=entries[0].isIntersecting;
+        if(visible)scheduleStoryFrame();
+      },{threshold:.02}).observe(document.getElementById("scroll-story"));
+      function animate() {
+        storyFramePending=false;
+        if(!visible||document.hidden)return;
         var now=performance.now();
-        if(mobileFrameInterval&&now-lastStoryFrame<mobileFrameInterval)return;
+        if(mobileFrameInterval&&now-lastStoryFrame<mobileFrameInterval){
+          scheduleStoryFrame();
+          return;
+        }
         lastStoryFrame=now;
         var elapsed=clock.getElapsedTime();
         master.rotation.y+=(pointerNorm.x*.38-master.rotation.y)*.05;
@@ -1311,8 +1346,9 @@
         pourStream.scale.set(1+Math.sin(elapsed*14)*.08,1,1+Math.cos(elapsed*14)*.08);
         stage4.visible=s4>.01; stage4.scale.setScalar(.5+s4*.32); stage4.rotation.x=.42*s4; stage4.rotation.y=elapsed*.25;
         renderer.render(scene,camera);
+        scheduleStoryFrame();
       }
-      animate();
+      document.addEventListener("visibilitychange",scheduleStoryFrame);
 
       var pills=Array.from(document.querySelectorAll(".story-pill"));
       var chapters=Array.from(document.querySelectorAll(".story-chapter"));
@@ -1353,6 +1389,7 @@
       var homePlaceholder=null;
       function updateCoffeeHandoff(){
         if(!homeCanvas||!homeSection||!storyVisual)return;
+        var previousProgress=homeHandoffProgress;
         var headerHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height"))||82;
         var homeTop=homeSection.getBoundingClientRect().top+scrollY;
         var storyTop=storySection.getBoundingClientRect().top+scrollY;
@@ -1360,6 +1397,8 @@
         var rawProgress=Math.max(0,Math.min(1,(scrollY-homeTop)/(handoffEnd-homeTop)));
         var progress=reduce?rawProgress:rawProgress*rawProgress*(3-2*rawProgress);
         homeHandoffProgress=progress;
+        if(scheduleHomeFrame&&(homeVisible||progress<1))scheduleHomeFrame();
+        if(rawProgress===1&&previousProgress===1)return;
         if(reduce&&homeCup)homeCup.position.y=homeCupBaseY*(1-progress);
         var sourceHeight=homeSection.clientHeight;
         var targetHeight=storyVisual.getBoundingClientRect().height;
@@ -1400,9 +1439,15 @@
         homeCanvas.style.transformOrigin="top left";
         homeCanvas.style.transform="translateX("+(targetShift*progress)+"px) scaleY("+(1+(targetScale-1)*progress)+")";
       }
+      var scrollUpdatePending=false;
       addEventListener("scroll",function(){
-        updateStoryStage();
-        updateCoffeeHandoff();
+        if(scrollUpdatePending)return;
+        scrollUpdatePending=true;
+        requestAnimationFrame(function(){
+          scrollUpdatePending=false;
+          updateStoryStage();
+          updateCoffeeHandoff();
+        });
       },{passive:true});
       addEventListener("resize",function(){
         fitHome();

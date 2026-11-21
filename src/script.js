@@ -8,6 +8,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       return document.getElementById(i);
     };
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var mobile3D = matchMedia("(max-width: 700px), (pointer: coarse)").matches;
   var mouse = { x: 0, y: 0 };
   addEventListener("pointermove", function (e) {
     mouse.x = (e.clientX / innerWidth) * 2 - 1;
@@ -226,7 +227,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   addEventListener(
     "pointermove",
     function (e) {
-      if (!reduce) {
+      if (!reduce && !mobile3D) {
         document.body.classList.add("cursor-active");
         cursor.style.left = e.clientX + "px";
         cursor.style.top = e.clientY + "px";
@@ -736,21 +737,26 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
   scheduleShowcaseRotation();
   /* ---------- 3D helpers ---------- */
-  var mobile3D = matchMedia("(max-width: 700px), (pointer: coarse)").matches;
   var mobileFrameInterval = mobile3D ? 1000 / 30 : 0;
   function mk(cv) {
-    var r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
-    r.setPixelRatio(Math.min(devicePixelRatio, mobile3D ? 1.35 : 2));
+    var r = new T.WebGLRenderer({
+      canvas: cv,
+      antialias: !mobile3D,
+      alpha: true,
+    });
+    r.setPixelRatio(Math.min(devicePixelRatio || 1, mobile3D ? 1.1 : 2));
     r.outputColorSpace = T.SRGBColorSpace;
     r.toneMapping = T.ACESFilmicToneMapping;
     r.toneMappingExposure = 1.05;
     var s = new T.Scene(),
       c = new T.PerspectiveCamera(35, 1, 0.1, 100);
-    var room = new RoomEnvironment();
-    var pmrem = new T.PMREMGenerator(r);
-    s.environment = pmrem.fromScene(room).texture;
-    pmrem.dispose();
-    room.dispose();
+    if (!mobile3D) {
+      var room = new RoomEnvironment();
+      var pmrem = new T.PMREMGenerator(r);
+      s.environment = pmrem.fromScene(room).texture;
+      pmrem.dispose();
+      room.dispose();
+    }
     s.add(new T.HemisphereLight(0xffffff, 0xd9c7b0, 0.85));
     var d = new T.DirectionalLight(0xfff1dd, 0.95);
     d.position.set(3, 5, 4);
@@ -1693,22 +1699,34 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
   /* ---------- loop ---------- */
   var vis = { h: true, m: false };
+  var loopPending = false;
+  function scheduleLoop() {
+    if (loopPending || document.hidden || (!vis.h && !vis.m)) return;
+    loopPending = true;
+    requestAnimationFrame(loop);
+  }
   new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       vis.h = entry.isIntersecting;
+      scheduleLoop();
     });
   }).observe($("hero"));
   new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       vis.m = entry.isIntersecting;
       showcaseVisible = entry.isIntersecting;
+      scheduleLoop();
     });
   }).observe(showcase);
   var last3DFrame = 0;
   function loop() {
-    requestAnimationFrame(loop);
+    loopPending = false;
+    if (document.hidden || (!vis.h && !vis.m)) return;
     var now = performance.now();
-    if (mobileFrameInterval && now - last3DFrame < mobileFrameInterval) return;
+    if (mobileFrameInterval && now - last3DFrame < mobileFrameInterval) {
+      scheduleLoop();
+      return;
+    }
     last3DFrame = now;
     if (vis.h) {
       if (!heroDragging) {
@@ -1720,7 +1738,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       H.c.position.set(0, 1.7, heroCamDistance);
       H.c.lookAt(0, -0.3, 0);
       H.r.render(H.s, H.c);
-      if (!reduce) {
+      if (!reduce && !mobile3D) {
         heroBeans.forEach(function (bean) {
           var depth = Number(bean.dataset.depth) || 1;
           bean.style.setProperty(
@@ -1744,8 +1762,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       menuProductRoot.rotation.set(menuRotation.x, menuRotation.y, 0);
       M.r.render(M.s, M.c);
     }
+    scheduleLoop();
   }
-  loop();
+  document.addEventListener("visibilitychange", scheduleLoop);
+  scheduleLoop();
 
   /* ---------- magnetic + tilt ---------- */
   document.querySelectorAll(".mag").forEach(function (el) {
