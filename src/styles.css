@@ -1140,7 +1140,7 @@ nav ul a.active::after {
   #menuList > .item > .ing {
     display: none;
   }
-  .item-open-mobile {
+  #menuList > .item > .item-open-mobile {
     position: relative;
     align-self: stretch;
     display: grid;
@@ -1153,15 +1153,6 @@ nav ul a.active::after {
     color: var(--esp);
     text-align: left;
     text-decoration: none;
-  }
-  .item-open-mobile::after {
-    justify-self: end;
-    margin-top: 3px;
-    color: var(--ac, var(--caramel));
-    content: "Click to view";
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
   }
   .item-open-mobile:focus-visible {
     border-radius: 4px;
@@ -1177,14 +1168,35 @@ nav ul a.active::after {
     font-size: 18px;
     font-weight: 600;
   }
+  .item-open-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .item-open-meta {
+    min-width: 0;
+    color: var(--mute);
+    font-size: 13px;
+    line-height: 1.25;
+  }
   .item-open-notes {
     color: var(--esp);
-    font-size: 14px;
     font-style: italic;
   }
   .item-open-ing {
-    color: var(--mute);
-    font-size: 13px;
+    color: inherit;
+  }
+  .item-open-hint {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    border: 1px solid rgba(201, 138, 61, 0.28);
+    border-radius: 999px;
+    background: rgba(201, 138, 61, 0.08);
+    color: var(--ac, var(--caramel));
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
   }
 }
 @media (max-width: 360px) {

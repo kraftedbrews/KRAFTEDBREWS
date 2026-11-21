@@ -464,11 +464,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         m[0] +
         '</span><span class="price">₱' +
         m[1] +
-        '</span></span><span class="item-open-notes">' +
+        '</span></span><span class="item-open-meta-row"><span class="item-open-meta"><span class="item-open-notes">' +
         m[2] +
-        '</span><span class="item-open-ing">' +
+        '</span> · <span class="item-open-ing">' +
         m[3] +
-        "</span>";
+        '</span></span><span class="item-open-hint">Click to view</span></span>';
       openButton.addEventListener("click", function () {
         showProductDialog(c, i, m);
       });
