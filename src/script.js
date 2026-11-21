@@ -312,33 +312,164 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     dialogArtwork = $("menuDialogArtwork"),
     dialogTitle = $("menuDialogTitle"),
     dialogPrice = $("menuDialogPrice"),
+    dialogOptions = $("menuDialogOptions"),
+    dialogTags = $("menuDialogTags"),
     dialogNotes = $("menuDialogNotes"),
-    dialogIng = $("menuDialogIng");
+    dialogIng = $("menuDialogIng"),
+    productDialogCloseTimer;
+  function getProductOptions(product) {
+    var prices = product[1].split("/").map(function (value) {
+        return value.trim();
+      }),
+      servings = product[2].split("/").map(function (value) {
+        return value.trim();
+      });
+    if (prices.length < 2 || prices.length !== servings.length) return [];
+    return servings.map(function (serving, index) {
+      return {
+        serving: serving.charAt(0).toUpperCase() + serving.slice(1),
+        price: prices[index],
+      };
+    });
+  }
   function showProductDialog(category, index, product) {
+    var options = getProductOptions(product),
+      useServingOptions =
+        options.length > 0 && window.matchMedia("(max-width: 700px)").matches;
     dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
     dialogTitle.textContent = product[0];
     dialogPrice.textContent = product[1] ? "₱" + product[1] : "";
-    dialogPrice.hidden = !product[1];
+    dialogPrice.hidden = !product[1] || useServingOptions;
+    dialogOptions.hidden = !useServingOptions;
+    dialogOptions.innerHTML = options
+      .map(function (option, optionIndex) {
+        return (
+          '<button class="menu-dialog-option" type="button" data-price-option aria-pressed="' +
+          (optionIndex === 0 ? "true" : "false") +
+          '">' +
+          option.serving +
+          " ₱" +
+          option.price +
+          "</button>"
+        );
+      })
+      .join("");
+    dialogTags.innerHTML = [category, "Made to order"]
+      .map(function (tag, tagIndex) {
+        return (
+          '<span class="menu-dialog-tag' +
+          (tagIndex ? " is-matcha" : "") +
+          '">' +
+          tag +
+          "</span>"
+        );
+      })
+      .join("");
     dialogNotes.textContent = product[2];
-    dialogNotes.hidden = !product[2];
+    dialogNotes.hidden = !product[2] || useServingOptions;
     dialogIng.textContent = product[3];
     dialogIng.hidden = !product[3];
+    window.clearTimeout(productDialogCloseTimer);
+    productDialog.classList.remove("is-visible", "is-closing");
     productDialog.showModal();
+    if (window.matchMedia("(max-width: 700px)").matches) {
+      requestAnimationFrame(function () {
+        productDialog.classList.add("is-visible");
+      });
+    }
   }
+  function closeProductDialog() {
+    if (!productDialog.open || productDialog.classList.contains("is-closing"))
+      return;
+    if (
+      !window.matchMedia("(max-width: 700px)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      productDialog.close();
+      return;
+    }
+    productDialog.classList.remove("is-visible");
+    productDialog.classList.add("is-closing");
+    productDialogCloseTimer = window.setTimeout(function () {
+      if (productDialog.open) productDialog.close();
+    }, 300);
+  }
+  dialogOptions.addEventListener("click", function (event) {
+    var selectedOption = event.target.closest("[data-price-option]");
+    if (!selectedOption || !dialogOptions.contains(selectedOption)) return;
+    dialogOptions.querySelectorAll("[data-price-option]").forEach(function (option) {
+      option.setAttribute(
+        "aria-pressed",
+        option === selectedOption ? "true" : "false",
+      );
+    });
+  });
   $("menuDialogClose").addEventListener("click", function () {
-    productDialog.close();
+    closeProductDialog();
   });
   productDialog.addEventListener("cancel", function (event) {
     event.preventDefault();
-    productDialog.close();
+    closeProductDialog();
   });
   productDialog.addEventListener("keydown", function (event) {
     if (event.key !== "Escape") return;
     event.preventDefault();
-    productDialog.close();
+    closeProductDialog();
   });
   productDialog.addEventListener("click", function (event) {
-    if (event.target === productDialog) productDialog.close();
+    if (event.target === productDialog) closeProductDialog();
+  });
+  productDialog.addEventListener("close", function () {
+    productDialog.classList.remove("is-visible", "is-closing");
+  });
+  var productSheetPointerStart = null;
+  productDialog.addEventListener("pointerdown", function (event) {
+    if (!event.target.closest(".menu-dialog-artwork")) return;
+    productSheetPointerStart = { x: event.clientX, y: event.clientY };
+    productDialog.setPointerCapture(event.pointerId);
+  });
+  productDialog.addEventListener("pointercancel", function () {
+    productSheetPointerStart = null;
+  });
+  productDialog.addEventListener("pointermove", function (event) {
+    if (!productSheetPointerStart) return;
+    var deltaY = event.clientY - productSheetPointerStart.y,
+      deltaX = event.clientX - productSheetPointerStart.x;
+    if (deltaY > 100 && Math.abs(deltaX) < 80) {
+      productSheetPointerStart = null;
+      closeProductDialog();
+    }
+  });
+  productDialog.addEventListener("pointerup", function () {
+    productSheetPointerStart = null;
+  });
+  var productSheetTouchStart = null;
+  dialogArtwork.addEventListener(
+    "touchstart",
+    function (event) {
+      if (event.touches.length !== 1 || event.changedTouches.length !== 1) {
+        productSheetTouchStart = null;
+        return;
+      }
+      var touch = event.changedTouches[0];
+      productSheetTouchStart = { x: touch.clientX, y: touch.clientY };
+    },
+    { passive: true },
+  );
+  dialogArtwork.addEventListener(
+    "touchend",
+    function (event) {
+      if (!productSheetTouchStart || !event.changedTouches.length) return;
+      var touch = event.changedTouches[0],
+        deltaY = touch.clientY - productSheetTouchStart.y,
+        deltaX = touch.clientX - productSheetTouchStart.x;
+      productSheetTouchStart = null;
+      if (deltaY > 80 && Math.abs(deltaX) < 80) closeProductDialog();
+    },
+    { passive: true },
+  );
+  dialogArtwork.addEventListener("touchcancel", function () {
+    productSheetTouchStart = null;
   });
   var promoDialog = $("promoDialog"),
     promoTrigger = $("promoTrigger"),

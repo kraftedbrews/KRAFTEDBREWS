@@ -368,6 +368,7 @@ export default function App() {
           id="menuProductDialog"
           aria-labelledby="menuDialogTitle"
         >
+          <span className="menu-dialog-handle" aria-hidden="true" />
           <div className="menu-dialog-artwork">
             <button
               className="menu-dialog-close"
@@ -384,6 +385,14 @@ export default function App() {
               <h2 id="menuDialogTitle" />
               <span className="price" id="menuDialogPrice" />
             </div>
+            <div
+              className="menu-dialog-options"
+              id="menuDialogOptions"
+              role="group"
+              aria-label="Choose a serving option"
+              hidden
+            />
+            <div className="menu-dialog-tags" id="menuDialogTags" />
             <p className="notes" id="menuDialogNotes" />
             <p className="ing" id="menuDialogIng" />
           </div>
