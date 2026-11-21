@@ -488,8 +488,15 @@
       .topbar { backdrop-filter:none; }
       .topbar .shell { padding-inline:5vw; }
       .brand-mark-frame { width:53px; height:44px; }
-      .home-copy { transform:translateY(-58px); }
-      .story-layout { --story-visual-height:42svh; }
+      .home-copy { transform:translateY(-96px); }
+      .home-copy > p:last-child {
+        max-width:32ch;
+        margin:12px auto 0;
+        font-size:15px;
+        line-height:1.45;
+      }
+      .scroll-cue { display:none; }
+      .story-layout { --story-visual-height:clamp(250px,38svh,320px); }
       .topbar nav {
         position:fixed;
         z-index:51;
@@ -540,44 +547,47 @@
         left:25%;
       }
       .header-cta { display:none; }
-      .home-copy h1 { font-size:clamp(48px,16vw,68px); }
+      .home-copy h1 { font-size:clamp(44px,14vw,58px); }
       .story-visual {
         top:var(--header-height);
         height:var(--story-visual-height);
         z-index:3;
-        overflow:visible;
+        overflow:hidden;
         border-right:0;
         border-bottom:1px solid var(--line);
       }
-      .story-chapters { padding:24px 16px 72px; }
+      .story-chapters {
+        margin-top:0;
+        padding:18px 16px 96px;
+      }
       .story-chapter {
-        min-height:100svh;
+        min-height:clamp(300px,46svh,420px);
         align-items:flex-start;
         padding:0;
+        scroll-margin-top:calc(var(--story-visual-height) + 16px);
       }
+      .story-chapter:first-child { padding-top:var(--header-height); }
       .story-stage-card {
-        position:fixed;
-        top:calc(var(--header-height) + var(--story-visual-height) + 58px);
-        right:16px;
-        left:16px;
+        position:relative;
+        top:auto;
+        right:auto;
+        left:auto;
+        width:100%;
         max-width:100%;
-        padding:24px;
+        padding:18px;
       }
+      .story-stage-card h2 { font-size:clamp(28px,7.5vw,36px); }
+      .story-stage-card p { font-size:14px; line-height:1.45; }
       .story-chapter .story-stage-card {
-        z-index:2;
-        visibility:hidden;
-        opacity:0;
-        pointer-events:none;
-        transition:opacity 240ms var(--ease), visibility 240ms var(--ease);
-      }
-      .story-chapter.active .story-stage-card {
+        z-index:auto;
         visibility:visible;
         opacity:1;
         pointer-events:auto;
+        transition:none;
       }
       .stage-pills {
         right:12px;
-        bottom:-52px;
+        bottom:12px;
         left:12px;
         width:auto;
         max-width:none;
@@ -598,10 +608,11 @@
       .brand-mark-frame { width:53px; height:44px; }
       .brand { gap:7px; }
       .editorial-grid { grid-template-columns:minmax(0,1fr); }
-      .roastery-frame { min-height:460px; }
-      .roastery-illustration { width:min(72%,320px); }
-      .counters { gap:10px; }
-      .counter-card { padding:20px 16px; }
+      .roastery-frame { min-height:0; padding:28px 22px 24px; }
+      .roastery-meta { flex-wrap:wrap; font-size:9px; letter-spacing:.12em; }
+      .roastery-illustration { width:min(72%,260px); margin:24px auto; }
+      .counters { grid-template-columns:minmax(0,1fr); gap:10px; margin-top:28px; }
+      .counter-card { min-height:0; padding:18px; }
     }
     @media (prefers-reduced-motion:reduce) {
       html { scroll-behavior:auto; }
@@ -1090,6 +1101,7 @@
         var width = homeCanvas.clientWidth || rect.width;
         var height = homeCanvas.clientHeight || rect.height;
         homeRenderer.setSize(width,height,false);
+        homeCamera.position.z = width < 700 ? 9 : 7.2;
         homeCamera.aspect = width / height;
         homeCamera.updateProjectionMatrix();
         homeCupBaseY = width < 700 ? -1.2 : -.95;
