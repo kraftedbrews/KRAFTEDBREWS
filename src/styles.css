@@ -481,6 +481,34 @@ nav ul a.active::after {
   height: 20px;
   --bean-rotation: -58deg;
 }
+.hero-bean-nine {
+  top: 26%;
+  left: 27%;
+  width: 28px;
+  height: 18px;
+  --bean-rotation: 52deg;
+}
+.hero-bean-ten {
+  top: 52%;
+  right: 20%;
+  width: 33px;
+  height: 21px;
+  --bean-rotation: -36deg;
+}
+.hero-bean-eleven {
+  bottom: 31%;
+  left: 25%;
+  width: 23px;
+  height: 15px;
+  --bean-rotation: 72deg;
+}
+.hero-bean-twelve {
+  right: 7%;
+  bottom: 43%;
+  width: 32px;
+  height: 20px;
+  --bean-rotation: 24deg;
+}
 .hero-copy {
   position: relative;
   z-index: 2;
@@ -1081,6 +1109,30 @@ nav ul a.active::after {
   }
   #hero {
     padding-top: 100px;
+  }
+  .hero-bean-nine {
+    top: 31%;
+    left: 4%;
+    width: 24px;
+    height: 15px;
+  }
+  .hero-bean-ten {
+    top: 50%;
+    right: 4%;
+    width: 26px;
+    height: 17px;
+  }
+  .hero-bean-eleven {
+    bottom: 30%;
+    left: 8%;
+    width: 22px;
+    height: 14px;
+  }
+  .hero-bean-twelve {
+    right: 8%;
+    bottom: 17%;
+    width: 29px;
+    height: 18px;
   }
   .hero-bean-three,
   .hero-bean-six,

@@ -69,6 +69,10 @@ export default function App() {
           <span className="hero-bean hero-bean-six" data-depth="0.6" />
           <span className="hero-bean hero-bean-seven" data-depth="1" />
           <span className="hero-bean hero-bean-eight" data-depth="0.8" />
+          <span className="hero-bean hero-bean-nine" data-depth="0.9" />
+          <span className="hero-bean hero-bean-ten" data-depth="1.25" />
+          <span className="hero-bean hero-bean-eleven" data-depth="0.7" />
+          <span className="hero-bean hero-bean-twelve" data-depth="1.1" />
         </div>
         <div className="hero-copy" id="hc">
           <h1>
