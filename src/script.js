@@ -302,7 +302,36 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   };
   var cats = Object.keys(MENU),
     tabs = $("tabs"),
-    list = $("menuList");
+    list = $("menuList"),
+    productDialog = $("menuProductDialog"),
+    dialogArtwork = $("menuDialogArtwork"),
+    dialogTitle = $("menuDialogTitle"),
+    dialogPrice = $("menuDialogPrice"),
+    dialogNotes = $("menuDialogNotes"),
+    dialogIng = $("menuDialogIng");
+  function showProductDialog(category, index, product) {
+    dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
+    dialogTitle.textContent = product[0];
+    dialogPrice.textContent = "₱" + product[1];
+    dialogNotes.textContent = product[2];
+    dialogIng.textContent = product[3];
+    productDialog.showModal();
+  }
+  $("menuDialogClose").addEventListener("click", function () {
+    productDialog.close();
+  });
+  productDialog.addEventListener("cancel", function (event) {
+    event.preventDefault();
+    productDialog.close();
+  });
+  productDialog.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    productDialog.close();
+  });
+  productDialog.addEventListener("click", function (event) {
+    if (event.target === productDialog) productDialog.close();
+  });
   function productArtwork(category, index, productName) {
     var photo = "/images/menu-pastry.jpg";
     if (category === "Coffee & Cocoa") {
@@ -425,6 +454,25 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         '</div><div class="ing">' +
         m[3] +
         "</div>";
+      var openButton = document.createElement("button");
+      openButton.className = "item-open-mobile";
+      openButton.type = "button";
+      openButton.setAttribute("aria-haspopup", "dialog");
+      openButton.setAttribute("aria-controls", "menuProductDialog");
+      openButton.innerHTML =
+        '<span class="item-open-title-row"><span class="item-open-name">' +
+        m[0] +
+        '</span><span class="price">₱' +
+        m[1] +
+        '</span></span><span class="item-open-notes">' +
+        m[2] +
+        '</span><span class="item-open-ing">' +
+        m[3] +
+        "</span>";
+      openButton.addEventListener("click", function () {
+        showProductDialog(c, i, m);
+      });
+      d.appendChild(openButton);
       list.appendChild(d);
     });
     if (!reduce) {

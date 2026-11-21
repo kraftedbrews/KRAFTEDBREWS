@@ -277,6 +277,31 @@ export default function App() {
           <div className="tabs" role="tablist" id="tabs" />
           <div className="menu" id="menuList" role="tabpanel" />
         </div>
+        <dialog
+          className="menu-product-dialog"
+          id="menuProductDialog"
+          aria-labelledby="menuDialogTitle"
+        >
+          <div className="menu-dialog-artwork">
+            <button
+              className="menu-dialog-close"
+              id="menuDialogClose"
+              type="button"
+              aria-label="Close product details"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+            <div id="menuDialogArtwork" />
+          </div>
+          <div className="menu-dialog-info">
+            <div className="top">
+              <h2 id="menuDialogTitle" />
+              <span className="price" id="menuDialogPrice" />
+            </div>
+            <p className="notes" id="menuDialogNotes" />
+            <p className="ing" id="menuDialogIng" />
+          </div>
+        </dialog>
       </section>
 
       <section id="visit">
