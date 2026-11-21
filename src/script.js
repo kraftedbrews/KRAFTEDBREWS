@@ -1517,8 +1517,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           new T.MeshStandardMaterial({
             map: brewTexture,
             roughness: 0.26,
-            transparent: true,
-            opacity: 0.96,
           }),
         );
         liq.position.y = -0.18;
