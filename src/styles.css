@@ -1297,6 +1297,10 @@ nav ul a.active::after {
     font-size: 18px;
     font-weight: 600;
   }
+  .item-open-title-row .price {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   .item-open-meta-row {
     display: flex;
     align-items: center;
@@ -2014,9 +2018,14 @@ h2 {
   align-items: baseline;
 }
 .item h3 {
+  min-width: 0;
   margin: 0;
   font-size: 19px;
   font-weight: 600;
+}
+.item .top .price {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 .price {
   font-weight: 500;
@@ -2310,6 +2319,8 @@ h2 {
     gap: 12px;
   }
   .menu-dialog-info h2 {
+    min-width: 0;
+    flex: 1 1 auto;
     font-family: Outfit, system-ui, sans-serif;
     font-size: 26px;
     font-weight: 700;

@@ -338,18 +338,22 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         options.length > 0 && window.matchMedia("(max-width: 700px)").matches;
     dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
     dialogTitle.textContent = product[0];
-    dialogPrice.textContent = product[1] ? "₱" + product[1] : "";
-    dialogPrice.hidden = !product[1] || useServingOptions;
+    dialogPrice.textContent = useServingOptions
+      ? "₱" + options[0].price
+      : product[1]
+        ? "₱" + product[1]
+        : "";
+    dialogPrice.hidden = !product[1];
     dialogOptions.hidden = !useServingOptions;
     dialogOptions.innerHTML = options
       .map(function (option, optionIndex) {
         return (
           '<button class="menu-dialog-option" type="button" data-price-option aria-pressed="' +
           (optionIndex === 0 ? "true" : "false") +
+          '" data-price="' +
+          option.price +
           '">' +
           option.serving +
-          " ₱" +
-          option.price +
           "</button>"
         );
       })
@@ -403,6 +407,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         option === selectedOption ? "true" : "false",
       );
     });
+    dialogPrice.textContent = "₱" + selectedOption.dataset.price;
   });
   $("menuDialogClose").addEventListener("click", function () {
     closeProductDialog();
