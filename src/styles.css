@@ -2043,10 +2043,9 @@ h2 {
   backdrop-filter: blur(3px);
 }
 .promo-dialog-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
+  position: relative;
+  padding: 0 42px;
+  text-align: center;
 }
 .promo-dialog-heading h2 {
   margin: 0;
@@ -2056,12 +2055,20 @@ h2 {
   color: var(--caramel);
 }
 .promo-dialog-heading .menu-dialog-close {
-  position: static;
-  flex: 0 0 40px;
+  top: 0;
+  right: 0;
+}
+.promo-highlight {
+  color: #b52e25;
+  font-weight: 700;
 }
 .promo-dialog-copy {
-  margin: 16px 0 24px;
+  max-width: 62ch;
+  margin: 18px auto 28px;
   color: var(--mute);
+  font-size: clamp(17px, 1.8vw, 20px);
+  line-height: 1.5;
+  text-align: center;
 }
 .promo-dialog-gallery {
   display: grid;

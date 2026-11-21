@@ -258,7 +258,7 @@ export default function App() {
             <h2 id="promoDialogTitle">
               <span className="script">Match your bill.</span>
               <br />
-              Get 50% off.
+              Get <span className="promo-highlight">50% off</span>.
             </h2>
           </div>
           <button
@@ -271,8 +271,8 @@ export default function App() {
           </button>
         </div>
         <p className="promo-dialog-copy">
-          One try per receipt. Match the timer to your bill and get 50% off your
-          order.
+          One try per receipt. Match the timer to your bill and get{" "}
+          <span className="promo-highlight">50% off</span> your order.
         </p>
         <ul
           className="promo-dialog-gallery"
