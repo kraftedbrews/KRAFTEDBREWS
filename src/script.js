@@ -258,6 +258,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       ["Caramel Macchiato", "173 / 193", "Hot / iced", "Espresso, milk and caramel"],
       ["Chocolate", "163 / 183", "Hot / iced", "Chocolate and milk"],
       ["Hiraya Latte", "173 / 193", "Hot / iced", "House specialty latte"],
+      ["Iced Spanish Latte", "203", "Iced", "Espresso, milk and condensed milk"],
       ["Matcha", "198 / 238", "Hot / iced", "Ceremonial matcha and milk"],
       ["Spanish Latte", "176 / 203", "Hot / iced", "Espresso, milk and condensed milk"],
     ],
@@ -271,6 +272,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       ["Low-Carb Brownie", "113", "Baked fresh", "Rich low-carb brownie"],
       ["Key Lime Pie (1 slice)", "198", "By the slice", "Tart key lime pie"],
       ["Krafted Cheesecake (1 slice)", "188", "By the slice", "Krafted house cheesecake"],
+      ["Ensaymada Cheesecake", "", "", ""],
       ["Matte Chocolate Cake (1 slice)", "203", "By the slice", "Chocolate cake"],
       ["Oatmeal Cookie", "103", "Baked fresh", "Chewy oatmeal cookie"],
     ],
@@ -279,7 +281,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       ["Fruit Soda", "156", "Cold", "Sparkling fruit soda"],
       ["Kold Brew (500 ml)", "178", "Cold", "Ready-to-drink cold brew"],
       ["Lemonade", "136", "Cold", "Fresh house lemonade"],
+      ["Lemangonade", "", "Iced", "Mango lemonade"],
       ["Lemonade Special", "156", "Cold", "Special lemonade"],
+      ["Matcha Milkshake", "", "Cold", "Matcha milkshake"],
       ["Vanilla Ice Cream", "53", "Cold", "Vanilla ice cream"],
       ["Vanilla Milkshake", "178", "Cold", "Vanilla milkshake"],
       ["Barista's Drink (600 ml)", "209", "Cold", "Double-shot specialty drink"],
@@ -313,9 +317,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function showProductDialog(category, index, product) {
     dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
     dialogTitle.textContent = product[0];
-    dialogPrice.textContent = "₱" + product[1];
+    dialogPrice.textContent = product[1] ? "₱" + product[1] : "";
+    dialogPrice.hidden = !product[1];
     dialogNotes.textContent = product[2];
+    dialogNotes.hidden = !product[2];
     dialogIng.textContent = product[3];
+    dialogIng.hidden = !product[3];
     productDialog.showModal();
   }
   $("menuDialogClose").addEventListener("click", function () {
@@ -356,25 +363,37 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       if (event.target === promoDialog) promoDialog.close();
     });
   }
+  var productPhotos = {
+    Affogato: "/images/products/affogato.jpg",
+    "Ensaymada Cheesecake": "/images/products/ensaymada-cheesecake.jpg",
+    "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
+    Lemangonade: "/images/products/lemangonade.jpg",
+    "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
+  };
   function productArtwork(category, index, productName) {
-    var photo = "/images/menu-pastry.jpg";
-    if (category === "Coffee & Cocoa") {
+    var photo = productPhotos[productName];
+    if (!photo && category === "Coffee & Cocoa") {
       photo =
         productName === "Affogato"
           ? "/images/menu-affogato.jpg"
           : "/images/menu-coffee.jpg";
-    } else if (category === "Whole Cakes") {
+    } else if (!photo && category === "Whole Cakes") {
       photo = "/images/menu-cake.jpg";
     } else if (
+      !photo &&
       category === "Miscellaneous" &&
       productName === "Midori Tea"
     ) {
       photo = "/images/menu-tea.jpg";
-    } else if (category === "Miscellaneous") {
+    } else if (!photo && category === "Miscellaneous") {
       photo = "/images/menu-lemonade.jpg";
+    } else if (!photo) {
+      photo = "/images/menu-pastry.jpg";
     }
     return (
-      '<div class="item-art item-art-photo" style="--art-bg:' +
+      '<div class="item-art item-art-photo' +
+      (productPhotos[productName] ? " item-art-photo-labeled" : "") +
+      '" style="--art-bg:' +
       ["#f3e5d1", "#e6ecdf", "#f4e3e6", "#e1ebee"][index % 4] +
       '"><div class="product-photo-wrap"><img class="product-photo" src="' +
       photo +
@@ -467,17 +486,18 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/^-|-$/g, "");
       d.style.animationDelay = i * 50 + "ms";
+      var priceMarkup = m[1]
+        ? '<span class="price">₱' + m[1] + "</span>"
+        : "";
       d.innerHTML =
         productArtwork(c, i, m[0]) +
         '<div class="top"><h3>' +
         m[0] +
-        '</h3><span class="price">₱' +
-        m[1] +
-        '</span></div><div class="notes">' +
-        m[2] +
-        '</div><div class="ing">' +
-        m[3] +
-        "</div>";
+        "</h3>" +
+        priceMarkup +
+        "</div>" +
+        (m[2] ? '<div class="notes">' + m[2] + "</div>" : "") +
+        (m[3] ? '<div class="ing">' + m[3] + "</div>" : "");
       var openButton = document.createElement("button");
       openButton.className = "item-open-mobile";
       openButton.type = "button";
@@ -486,13 +506,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       openButton.innerHTML =
         '<span class="item-open-title-row"><span class="item-open-name">' +
         m[0] +
-        '</span><span class="price">₱' +
-        m[1] +
-        '</span></span><span class="item-open-meta-row"><span class="item-open-meta"><span class="item-open-notes">' +
-        m[2] +
-        '</span> · <span class="item-open-ing">' +
-        m[3] +
-        '</span></span><span class="item-open-hint">Click to view</span></span>';
+        "</span>" +
+        priceMarkup +
+        '</span><span class="item-open-meta-row"><span class="item-open-meta">' +
+        (m[2] ? '<span class="item-open-notes">' + m[2] + "</span>" : "") +
+        (m[2] && m[3] ? " · " : "") +
+        (m[3] ? '<span class="item-open-ing">' + m[3] + "</span>" : "") +
+        '</span><span class="item-open-hint">Click to view</span></span>';
       openButton.addEventListener("click", function () {
         showProductDialog(c, i, m);
       });
