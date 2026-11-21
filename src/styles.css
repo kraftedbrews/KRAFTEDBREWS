@@ -1174,6 +1174,10 @@ nav ul a.active::after {
   #hero {
     grid-template-columns: minmax(0, 1fr);
   }
+  .hero-copy {
+    justify-self: center;
+    text-align: center;
+  }
   .cards {
     display: none;
     grid-template-columns: 1fr;
@@ -2248,8 +2252,13 @@ h2 {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
+  .home-story-heading {
+    text-align: center;
+  }
   .home-story-heading h2 {
     max-width: 13ch;
+    margin: 0 auto;
+    text-align: center;
   }
   .home-story-copy {
     padding: 22px 0 0;
