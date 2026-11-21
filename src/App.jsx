@@ -304,6 +304,40 @@ export default function App() {
         </dialog>
       </section>
 
+      <section
+        className="home-story"
+        id="home-story"
+        aria-labelledby="homeStoryHeading"
+      >
+        <div className="wrap home-story-grid">
+          <div className="home-story-heading">
+            <p className="home-story-eyebrow">Our Story</p>
+            <h2 id="homeStoryHeading">
+              <span className="script">Every cup</span>
+              <br />
+              made with care.
+            </h2>
+          </div>
+          <div className="home-story-copy">
+            <p>
+              There is nothing quite like enjoying that perfect cup of coffee.
+              We operate Krafted Brews with the ultimate goal of always
+              providing each customer with exactly that. With great-tasting
+              coffee from around the world — from intense aromas to creamy
+              textures — we are here to show you that our coffee can cure all
+              your tension. One sip at a time.
+            </p>
+            <p>
+              At Krafted Brews, we provide you with delightfully delicious
+              coffee which is prepared specially for each and every customer.
+            </p>
+            <a className="btn ghost home-story-link" href="/our-story.html">
+              Read our story <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section id="visit">
         <div className="wrap split">
           <div>
