@@ -1081,7 +1081,7 @@ nav ul a.active::after {
   }
   .hero-receipt-card {
     width: min(100%, 220px);
-    min-height: 230px;
+    min-height: 280px;
     justify-self: center;
   }
   .hero-receipt-actions {
@@ -1109,9 +1109,6 @@ nav ul a.active::after {
 @media (max-width: 480px) {
   .hero-feature {
     grid-template-columns: 1fr;
-  }
-  .hero-receipt-card {
-    min-height: 245px;
   }
   .hero-product canvas {
     width: min(100%, 290px);
