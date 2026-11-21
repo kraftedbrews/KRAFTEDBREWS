@@ -2248,12 +2248,18 @@ h2 {
   }
 }
 @media (max-width: 700px) {
+  .home-story {
+    padding: 48px 5vw;
+  }
   .home-story-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: 16px;
   }
   .home-story-heading {
     text-align: center;
+  }
+  .home-story-eyebrow {
+    margin-bottom: 8px;
   }
   .home-story-heading h2 {
     max-width: 13ch;
@@ -2261,7 +2267,7 @@ h2 {
     text-align: center;
   }
   .home-story-copy {
-    padding: 22px 0 0;
+    padding: 16px 0 0;
     border-top: 1px solid rgba(201, 138, 61, 0.38);
     border-left: 0;
   }
