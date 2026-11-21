@@ -505,6 +505,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       wordmark: "Caffè Latte",
       notes: "Hot or iced · espresso and steamed milk",
       model: 0,
+      decoration: "beans",
     },
     {
       category: "Pastries",
@@ -512,6 +513,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       wordmark: "Key Lime Pie",
       notes: "Bright citrus · whipped cream",
       model: 1,
+      decoration: "pie",
     },
     {
       category: "Miscellaneous",
@@ -519,6 +521,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       wordmark: "Kold Brew (500 ml)",
       notes: "Cold · ready-to-drink cold brew",
       model: 2,
+      decoration: "ice",
     },
   ];
   var showcase = $("menuShowcase"),
@@ -542,6 +545,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       (index + featuredBrews.length) % featuredBrews.length;
     var brew = featuredBrews[featuredBrewIndex];
     showcase.dataset.slide = featuredBrewIndex;
+    showcase.dataset.decoration = brew.decoration;
     showcaseCategory.textContent = brew.category;
     showcaseProduct.textContent = brew.product;
     showcaseNotes.textContent = brew.notes;

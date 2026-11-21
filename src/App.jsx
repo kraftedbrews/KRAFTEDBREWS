@@ -211,6 +211,7 @@ export default function App() {
           className="menu-showcase"
           id="menuShowcase"
           data-slide="0"
+          data-decoration="beans"
           role="region"
           aria-roledescription="carousel"
           aria-label="Featured Krafted Brews menu"
@@ -218,10 +219,10 @@ export default function App() {
           <div className="menu-showcase-wordmark" aria-hidden="true">
             <span id="menuSlideWordmark">Caffè Latte</span>
           </div>
-          <span className="menu-bean menu-bean-one" aria-hidden="true" />
-          <span className="menu-bean menu-bean-two" aria-hidden="true" />
-          <span className="menu-bean menu-bean-three" aria-hidden="true" />
-          <span className="menu-bean menu-bean-four" aria-hidden="true" />
+          <span className="menu-scatter menu-scatter-one" aria-hidden="true" />
+          <span className="menu-scatter menu-scatter-two" aria-hidden="true" />
+          <span className="menu-scatter menu-scatter-three" aria-hidden="true" />
+          <span className="menu-scatter menu-scatter-four" aria-hidden="true" />
           <canvas
             id="menuCv"
             className="menu-showcase-cup"
