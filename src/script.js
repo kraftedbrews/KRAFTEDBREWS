@@ -333,6 +333,29 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   productDialog.addEventListener("click", function (event) {
     if (event.target === productDialog) productDialog.close();
   });
+  var promoDialog = $("promoDialog"),
+    promoBookmark = $("promoBookmark"),
+    promoDialogClose = $("promoDialogClose");
+  if (promoDialog && promoBookmark && promoDialogClose) {
+    promoBookmark.addEventListener("click", function () {
+      promoDialog.showModal();
+    });
+    promoDialogClose.addEventListener("click", function () {
+      promoDialog.close();
+    });
+    promoDialog.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      promoDialog.close();
+    });
+    promoDialog.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      promoDialog.close();
+    });
+    promoDialog.addEventListener("click", function (event) {
+      if (event.target === promoDialog) promoDialog.close();
+    });
+  }
   function productArtwork(category, index, productName) {
     var photo = "/images/menu-pastry.jpg";
     if (category === "Coffee & Cocoa") {

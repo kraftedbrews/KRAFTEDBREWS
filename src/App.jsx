@@ -80,6 +80,23 @@ export default function App() {
         <a className="btn mag" style={{ padding: "10px 20px" }} href="#visit">
           Find our café
         </a>
+        <button
+          className="promo-bookmark"
+          id="promoBookmark"
+          type="button"
+          aria-label="Open the Match Your Bill promo"
+          aria-controls="promoDialog"
+          title="A little coffee surprise"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M7 4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V21l-5-3.5L7 21V4.5Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </nav>
 
       <header id="hero">
@@ -232,6 +249,52 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      <dialog
+        className="promo-dialog"
+        id="promoDialog"
+        aria-labelledby="promoDialogTitle"
+      >
+        <div className="promo-dialog-heading">
+          <div>
+            <p className="home-promo-eyebrow">A little surprise</p>
+            <h2 id="promoDialogTitle">
+              <span className="script">Match your bill.</span>
+              <br />
+              Get 50% off.
+            </h2>
+          </div>
+          <button
+            className="menu-dialog-close"
+            id="promoDialogClose"
+            type="button"
+            aria-label="Close promo"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <p className="promo-dialog-copy">
+          One try per receipt. Match the timer to your bill and get 50% off your
+          order.
+        </p>
+        <ul
+          className="promo-dialog-gallery"
+          aria-label="Photos from the Match Your Bill promotion"
+        >
+          {promoImages.map((image) => (
+            <li key={image.src}>
+              <img
+                src={image.src}
+                alt={image.alt}
+                width="768"
+                height="960"
+                loading="lazy"
+                decoding="async"
+              />
+            </li>
+          ))}
+        </ul>
+      </dialog>
 
       <section id="menu">
         <div
