@@ -741,10 +741,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function mk(cv) {
     var r = new T.WebGLRenderer({
       canvas: cv,
-      antialias: !mobile3D,
+      antialias: true,
       alpha: true,
     });
-    r.setPixelRatio(Math.min(devicePixelRatio || 1, mobile3D ? 1.1 : 2));
+    r.setPixelRatio(Math.min(devicePixelRatio || 1, mobile3D ? 1.35 : 2));
     r.outputColorSpace = T.SRGBColorSpace;
     r.toneMapping = T.ACESFilmicToneMapping;
     r.toneMappingExposure = 1.05;
@@ -757,8 +757,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       pmrem.dispose();
       room.dispose();
     }
-    s.add(new T.HemisphereLight(0xffecd6, 0x8c5c3a, 0.78));
-    var d = new T.DirectionalLight(0xffe2bd, 1.05);
+    s.add(new T.HemisphereLight(0xffffff, 0xd9c7b0, 0.85));
+    var d = new T.DirectionalLight(0xfff1dd, 0.95);
     d.position.set(3, 5, 4);
     s.add(d);
     var o = { r: r, s: s, c: c, w: 1, h: 1 };
@@ -789,8 +789,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     );
   }
   var ceramic = new T.MeshStandardMaterial({
-    color: 0xf3e2c6,
-    roughness: 0.34,
+    color: 0xffffff,
+    roughness: 0.25,
     metalness: 0,
     side: T.DoubleSide,
   });
@@ -1415,22 +1415,87 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       build: function () {
         var g = new T.Group();
         var gm = new T.MeshStandardMaterial({
-          color: 0xdfe8ee,
+          color: 0xd8e5e9,
           transparent: true,
-          opacity: 0.28,
-          roughness: 0.05,
+          opacity: 0.3,
+          roughness: 0.1,
           side: T.DoubleSide,
+          depthWrite: false,
         });
         g.add(
-          new T.Mesh(new T.CylinderGeometry(0.8, 0.65, 2.1, 40, 1, true), gm),
+          new T.Mesh(new T.CylinderGeometry(0.8, 0.65, 2.1, 64, 1, true), gm),
         );
+        var rimMaterial = new T.MeshStandardMaterial({
+          color: 0xd9e5e8,
+          transparent: true,
+          opacity: 0.72,
+          roughness: 0.22,
+          depthWrite: false,
+        });
+        [
+          [0.8, 1.05, 0.022],
+          [0.65, -1.05, 0.016],
+        ].forEach(function (edge) {
+          var rim = new T.Mesh(
+            new T.TorusGeometry(edge[0], edge[2], 8, 64),
+            rimMaterial,
+          );
+          rim.rotation.x = Math.PI / 2;
+          rim.position.y = edge[1];
+          g.add(rim);
+        });
+        var glassHighlightMaterial = new T.MeshBasicMaterial({
+          color: 0xf4f8f8,
+          transparent: true,
+          opacity: 0.48,
+          depthWrite: false,
+        });
+        [
+          [
+            [-0.72, 0.88, 0.31],
+            [-0.68, 0.3, 0.34],
+            [-0.62, -0.3, 0.35],
+            [-0.57, -0.88, 0.33],
+          ],
+          [
+            [0.72, 0.88, 0.31],
+            [0.68, 0.3, 0.34],
+            [0.62, -0.3, 0.35],
+            [0.57, -0.88, 0.33],
+          ],
+        ].forEach(function (points) {
+          var curve = new T.CatmullRomCurve3(
+            points.map(function (point) {
+              return new T.Vector3(point[0], point[1], point[2]);
+            }),
+          );
+          g.add(
+            new T.Mesh(
+              new T.TubeGeometry(curve, 18, 0.012, 6, false),
+              glassHighlightMaterial,
+            ),
+          );
+        });
+        var brewCanvas = document.createElement("canvas");
+        brewCanvas.width = 256;
+        brewCanvas.height = 512;
+        var brewContext = brewCanvas.getContext("2d");
+        var brewGradient = brewContext.createLinearGradient(0, 0, 0, 512);
+        brewGradient.addColorStop(0, "#9a6037");
+        brewGradient.addColorStop(0.24, "#704426");
+        brewGradient.addColorStop(0.62, "#482719");
+        brewGradient.addColorStop(1, "#2b170f");
+        brewContext.fillStyle = brewGradient;
+        brewContext.fillRect(0, 0, brewCanvas.width, brewCanvas.height);
+        var brewTexture = new T.CanvasTexture(brewCanvas);
+        brewTexture.colorSpace = T.SRGBColorSpace;
         var liq = new T.Mesh(
-          new T.CylinderGeometry(0.76, 0.63, 1.7, 40),
+          new T.CylinderGeometry(0.76, 0.63, 1.7, 64),
           new T.MeshStandardMaterial({
-            color: 0x2a140a,
-            roughness: 0.3,
+            map: brewTexture,
+            roughness: 0.26,
             transparent: true,
-            opacity: 0.95,
+            opacity: 0.96,
           }),
         );
         liq.position.y = -0.18;
@@ -1446,14 +1511,17 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           [-0.3, 0.6, -0.2],
           [0.25, 0.45, -0.3],
         ].forEach(function (p, i) {
-          var m = new T.Mesh(new T.BoxGeometry(0.5, 0.5, 0.5), ice);
+          var m = new T.Mesh(
+            new RoundedBoxGeometry(0.5, 0.5, 0.5, 3, 0.06),
+            ice,
+          );
           m.position.set(p[0], p[1], p[2]);
           m.rotation.set(i, i * 1.3, i * 0.7);
           g.add(m);
         });
         var sw = new T.Mesh(
           new T.CylinderGeometry(0.04, 0.04, 2.6, 10),
-          new T.MeshStandardMaterial({ color: 0x28150b }),
+          new T.MeshStandardMaterial({ color: 0x4a2c1a }),
         );
         sw.position.set(0.3, 0.55, 0);
         sw.rotation.z = -0.15;
@@ -1656,7 +1724,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   setFeaturedProduct(featuredBrews[featuredBrewIndex].model);
 
   var menuCanvas = $("menuCv");
-  var menuAutoRotation = mobile3D && !reduce ? 0.008 : 0;
+  var menuAutoRotation = 0;
   if (!mobile3D) {
     menuCanvas.addEventListener("pointerdown", function (event) {
       menuDragging = true;
