@@ -757,8 +757,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       pmrem.dispose();
       room.dispose();
     }
-    s.add(new T.HemisphereLight(0xffffff, 0xd9c7b0, 0.85));
-    var d = new T.DirectionalLight(0xfff1dd, 0.95);
+    s.add(new T.HemisphereLight(0xffecd6, 0x8c5c3a, 0.78));
+    var d = new T.DirectionalLight(0xffe2bd, 1.05);
     d.position.set(3, 5, 4);
     s.add(d);
     var o = { r: r, s: s, c: c, w: 1, h: 1 };
@@ -789,8 +789,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     );
   }
   var ceramic = new T.MeshStandardMaterial({
-    color: 0xffffff,
-    roughness: 0.25,
+    color: 0xf3e2c6,
+    roughness: 0.34,
     metalness: 0,
     side: T.DoubleSide,
   });

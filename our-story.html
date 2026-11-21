@@ -1023,24 +1023,27 @@
       if (homeCanvas) {
         homeRenderer = new T.WebGLRenderer({ canvas:homeCanvas, alpha:true, antialias:!mobile3D });
         homeRenderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.1:2));
+        homeRenderer.outputColorSpace = T.SRGBColorSpace;
+        homeRenderer.toneMapping = T.ACESFilmicToneMapping;
+        homeRenderer.toneMappingExposure = 1.05;
         homeScene = new T.Scene();
         homeCamera = new T.PerspectiveCamera(38,1,.1,60);
         homeCamera.position.set(0,.8,7.2);
         homeCamera.lookAt(0,-.2,0);
-        homeScene.add(new T.HemisphereLight(0xf5ebdd,0x2b1810,.85));
-        var key = new T.DirectionalLight(0xffe4c4,1.85);
+        homeScene.add(new T.HemisphereLight(0xffecd6,0x56351f,.78));
+        var key = new T.DirectionalLight(0xffdfb8,1.65);
         key.position.set(4.5,6.5,5);
         homeScene.add(key);
-        var rimLight = new T.PointLight(0xffc98a,1.15,12);
+        var rimLight = new T.PointLight(0xffc98a,.95,12);
         rimLight.position.set(-3.5,2.5,4);
         homeScene.add(rimLight);
-        var fillLight = new T.PointLight(0xc98a3d,.55,10);
+        var fillLight = new T.PointLight(0xc98a3d,.4,10);
         fillLight.position.set(3,-1,3);
         homeScene.add(fillLight);
-        homeCremaLight = new T.PointLight(0xffd49a,.5,6);
+        homeCremaLight = new T.PointLight(0xffd49a,.42,6);
         homeCremaLight.position.set(0,1.8,2);
         homeScene.add(homeCremaLight);
-        var ceramic = new T.MeshStandardMaterial({ color:0xf5ebdd, roughness:.34, metalness:.04 });
+        var ceramic = new T.MeshStandardMaterial({ color:0xf0d5aa, roughness:.4, metalness:.04 });
         var roasted = new T.MeshStandardMaterial({ color:0x4a2c1a, roughness:.42, metalness:.08 });
         homeCup = new T.Group();
         homeCup.add(lathe([[0,-.78],[.85,-.78],[1.48,-.62],[1.52,-.57],[.82,-.71],[0,-.71]], ceramic));
@@ -1144,7 +1147,7 @@
               Math.sin(elapsed * .7) * .0015,
               Math.cos(elapsed * .7) * .0015
             );
-            homeCremaLight.intensity = .5 + Math.sin(elapsed * 1.1) * .025;
+            homeCremaLight.intensity = .42 + Math.sin(elapsed * 1.1) * .02;
             var homeCupRotationY = pointer.x*.38 + elapsed*.22*homeHandoffProgress;
             homeCup.rotation.y += (homeCupRotationY-homeCup.rotation.y)*.04;
             homeCup.rotation.x += (pointer.y*.22-homeCup.rotation.x)*.04;
@@ -1189,13 +1192,13 @@
       renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile3D?1.1:2));
       renderer.shadowMap.enabled = !mobile3D;
       renderer.toneMapping = T.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
+      renderer.toneMappingExposure = 1.08;
       var scene = new T.Scene();
       var camera = new T.PerspectiveCamera(38,1,.1,60);
       camera.position.set(0,1.35,7.6);
       camera.lookAt(0,0,0);
-      scene.add(new T.HemisphereLight(0xf5ebdd,0x2b1810,.85));
-      var keyLight = new T.DirectionalLight(0xffe4c4,1.85);
+      scene.add(new T.HemisphereLight(0xffecd6,0x56351f,.78));
+      var keyLight = new T.DirectionalLight(0xffdfb8,1.65);
       keyLight.position.set(4.5,6.5,5);
       scene.add(keyLight);
 
@@ -1205,7 +1208,7 @@
       var roastedMat = roasted;
       var copperMat = new T.MeshStandardMaterial({color:0xb8733e,roughness:.26,metalness:.86});
       var caramelMat = new T.MeshStandardMaterial({color:0xc98a3d,roughness:.32,metalness:.12});
-      var glassMat = new T.MeshPhysicalMaterial({color:0xf5ebdd,transparent:true,opacity:.36,roughness:.12,metalness:.05});
+      var glassMat = new T.MeshPhysicalMaterial({color:0xf0dfc7,transparent:true,opacity:.36,roughness:.12,metalness:.05});
 
       var stage1 = homeCup.clone(true);
       stage1.position.set(0,0,0);
@@ -1213,7 +1216,7 @@
       stage1.scale.setScalar(.82);
       master.add(stage1);
       var storyCremaSurface=homeCremaSurface;
-      var storyCremaLight=new T.PointLight(0xffd49a,.5,6);
+      var storyCremaLight=new T.PointLight(0xffd49a,.42,6);
       storyCremaLight.position.set(0,2.1,2);
       scene.add(storyCremaLight);
       var heroBeans=[];
