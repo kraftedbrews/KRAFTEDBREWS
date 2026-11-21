@@ -75,10 +75,6 @@ export default function App() {
             <span className="script">Crafted slowly</span>. Poured with
             purpose.
           </h1>
-          <p>
-            Small-lot beans, roasted in the morning and brewed by hand. Pull up
-            a chair and stay a while.
-          </p>
           <div className="cards">
             <a className="gcard" href="#menu">
               <b>Explore Menu</b>
@@ -321,7 +317,7 @@ export default function App() {
             <ul className="amen">
               <li>Free Wi-Fi</li>
               <li>Power at every table</li>
-              <li>Quiet workspace upstairs</li>
+              <li>Quiet workspace</li>
               <li>Pet-friendly patio</li>
               <li>Beans to take home</li>
             </ul>
