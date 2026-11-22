@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 
 const promoImages = [
   {
@@ -73,31 +73,29 @@ const galleryImages = [
 
 function GalleryCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const swipeStartX = useRef(null);
   const count = galleryImages.length;
-
-  useEffect(() => {
-    if (isPaused) {
-      return undefined;
-    }
-
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % count);
-    }, 4200);
-
-    return () => window.clearInterval(intervalId);
-  }, [count, isPaused]);
 
   function moveBy(step) {
     setActiveIndex((current) => (current + step + count) % count);
-    setIsPaused(true);
   }
 
-  function selectImage(index) {
-    setActiveIndex(index);
-    setIsPaused(true);
+  function startSwipe(event) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest("button")) return;
+
+    swipeStartX.current = event.clientX;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function finishSwipe(event) {
+    if (swipeStartX.current === null) return;
+
+    const distance = event.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+    if (Math.abs(distance) > 40) {
+      moveBy(distance < 0 ? 1 : -1);
+    }
   }
 
   return (
@@ -107,74 +105,97 @@ function GalleryCarousel() {
       aria-roledescription="carousel"
       aria-label="Krafted Brews gallery"
     >
-      <div className="gallery-stage">
-        {galleryImages.map((image, index) => {
-          const wrappedDistance = (index - activeIndex + count) % count;
-          const distance =
-            wrappedDistance > count / 2 ? wrappedDistance - count : wrappedDistance;
-          const isVisible = Math.abs(distance) <= 1;
-          const isActive = distance === 0;
-
-          return (
-            <button
-              className="gallery-slide"
-              type="button"
-              key={image.src}
-              aria-roledescription="slide"
-              aria-label={`${index + 1} of ${count}: ${image.caption}`}
-              aria-hidden={!isVisible}
-              aria-current={isActive ? "true" : undefined}
-              tabIndex={isVisible ? 0 : -1}
-              onClick={() => selectImage(index)}
-              style={{
-                "--slide-offset": `${distance * 82}%`,
-                "--slide-scale": isActive ? 1 : 0.82,
-                "--slide-rotation": `${distance * -5}deg`,
-                zIndex: isActive ? 2 : 1,
-                visibility: isVisible ? "visible" : "hidden",
-              }}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                loading="lazy"
-                decoding="async"
+      <article
+        className="instagram-post"
+        aria-label="Krafted Brews Instagram-style post"
+      >
+        <header className="instagram-post-header">
+          <span className="instagram-avatar" aria-hidden="true">
+            KB
+          </span>
+          <div className="instagram-account">
+            <strong>kraftedbrews</strong>
+            <span>Bambang, Nueva Vizcaya</span>
+          </div>
+          <span className="instagram-more" aria-hidden="true">
+            ···
+          </span>
+        </header>
+        <div
+          className="instagram-photo-window"
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`Photo ${activeIndex + 1} of ${count}: ${galleryImages[activeIndex].caption}`}
+          onPointerDown={startSwipe}
+          onPointerUp={finishSwipe}
+          onPointerCancel={() => {
+            swipeStartX.current = null;
+          }}
+        >
+          <div
+            className="instagram-photo-track"
+            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          >
+            {galleryImages.map((image, index) => (
+              <figure
+                className="instagram-photo-slide"
+                key={image.src}
+                aria-hidden={index !== activeIndex}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading={index === activeIndex ? "eager" : "lazy"}
+                  decoding="async"
+                  draggable="false"
+                />
+              </figure>
+            ))}
+          </div>
+          <button
+            className="instagram-photo-arrow instagram-photo-previous"
+            type="button"
+            aria-label="Previous photo"
+            onClick={() => moveBy(-1)}
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+          <button
+            className="instagram-photo-arrow instagram-photo-next"
+            type="button"
+            aria-label="Next photo"
+            onClick={() => moveBy(1)}
+          >
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
+        <footer className="instagram-post-footer">
+          <div className="instagram-post-actions" aria-hidden="true">
+            <span>♡</span>
+            <span>◯</span>
+            <span>➤</span>
+            <span className="instagram-bookmark">▱</span>
+          </div>
+          <div
+            className="instagram-photo-dots"
+            role="group"
+            aria-label="Choose a gallery photo"
+          >
+            {galleryImages.map((image, index) => (
+              <button
+                key={image.src}
+                type="button"
+                aria-label={`Show photo ${index + 1} of ${count}`}
+                aria-current={index === activeIndex ? "true" : undefined}
+                onClick={() => setActiveIndex(index)}
               />
-            </button>
-          );
-        })}
-      </div>
-      <div className="gallery-caption" aria-live="polite">
-        <p>{galleryImages[activeIndex].caption}</p>
-        <span>
-          {String(activeIndex + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-        </span>
-      </div>
-      <div className="gallery-controls" aria-label="Gallery controls">
-        <button
-          className="gallery-arrow"
-          type="button"
-          aria-label="Previous photo"
-          onClick={() => moveBy(-1)}
-        >
-          <span aria-hidden="true">←</span>
-        </button>
-        <button
-          className="gallery-pause"
-          type="button"
-          onClick={() => setIsPaused((paused) => !paused)}
-        >
-          {isPaused ? "Play slideshow" : "Pause slideshow"}
-        </button>
-        <button
-          className="gallery-arrow"
-          type="button"
-          aria-label="Next photo"
-          onClick={() => moveBy(1)}
-        >
-          <span aria-hidden="true">→</span>
-        </button>
-      </div>
+            ))}
+          </div>
+          <p className="instagram-post-caption" aria-live="polite">
+            <strong>kraftedbrews</strong> {galleryImages[activeIndex].caption}
+          </p>
+        </footer>
+      </article>
     </div>
   );
 }
