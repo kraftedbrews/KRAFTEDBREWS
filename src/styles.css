@@ -923,6 +923,11 @@ nav ul a.active::after {
   filter: drop-shadow(0 24px 24px rgba(40, 21, 11, 0.18));
   animation: product-arrive 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+@media (min-width: 1024px) {
+  .hero-product {
+    left: clamp(36px, 5vw, 72px);
+  }
+}
 .hero-product::after {
   content: "";
   position: absolute;
