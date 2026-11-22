@@ -606,75 +606,93 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     );
     */
   }
+  var categoryPanels = new Map(),
+    activeCategory = cats[0],
+    mobileMenuView = matchMedia("(max-width: 700px)");
+  function createMenuItem(c, i, m) {
+    var d = document.createElement("article");
+    d.className = "item";
+    d.id =
+      "menu-item-" +
+      m[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    d.style.animationDelay = i * 50 + "ms";
+    var priceMarkup = m[1]
+      ? '<span class="price">₱' + m[1] + "</span>"
+      : "";
+    d.innerHTML =
+      productArtwork(c, i, m[0]) +
+      '<div class="top"><h4>' +
+      m[0] +
+      "</h4>" +
+      priceMarkup +
+      "</div>" +
+      (m[2] ? '<div class="notes">' + m[2] + "</div>" : "") +
+      (m[3] ? '<div class="ing">' + m[3] + "</div>" : "");
+
+    var openButton = document.createElement("button");
+    openButton.className = "item-open-mobile";
+    openButton.type = "button";
+    openButton.setAttribute("aria-haspopup", "dialog");
+    openButton.setAttribute("aria-controls", "menuProductDialog");
+    openButton.innerHTML =
+      '<span class="item-open-title-row"><span class="item-open-name">' +
+      m[0] +
+      "</span>" +
+      priceMarkup +
+      '</span><span class="item-open-meta-row"><span class="item-open-meta">' +
+      (m[2] ? '<span class="item-open-notes">' + m[2] + "</span>" : "") +
+      (m[2] && m[3] ? " · " : "") +
+      (m[3] ? '<span class="item-open-ing">' + m[3] + "</span>" : "") +
+      '</span><span class="item-open-hint">Tap to view</span></span>';
+    openButton.addEventListener("click", function () {
+      showProductDialog(c, i, m);
+    });
+    d.appendChild(openButton);
+
+    var desktopOpenButton = document.createElement("button");
+    desktopOpenButton.className = "item-open-desktop";
+    desktopOpenButton.type = "button";
+    desktopOpenButton.textContent = "View details";
+    desktopOpenButton.setAttribute("aria-haspopup", "dialog");
+    desktopOpenButton.setAttribute("aria-controls", "menuProductDialog");
+    desktopOpenButton.setAttribute("aria-label", "View details for " + m[0]);
+    desktopOpenButton.addEventListener("click", function () {
+      showProductDialog(c, i, m);
+    });
+    d.appendChild(desktopOpenButton);
+
+    if (!reduce) {
+      d.addEventListener("pointermove", function (event) {
+        if (event.pointerType !== "mouse") return;
+        var bounds = d.getBoundingClientRect();
+        var x = (event.clientX - bounds.left) / bounds.width - 0.5;
+        var y = (event.clientY - bounds.top) / bounds.height - 0.5;
+        d.style.setProperty("--card-tilt-x", (-y * 7).toFixed(2) + "deg");
+        d.style.setProperty("--card-tilt-y", (x * 9).toFixed(2) + "deg");
+        d.style.setProperty("--card-shift-x", (x * 3).toFixed(1) + "px");
+        d.style.setProperty("--card-shift-y", (y * 3).toFixed(1) + "px");
+      });
+      d.addEventListener("pointerleave", function () {
+        d.style.setProperty("--card-tilt-x", "0deg");
+        d.style.setProperty("--card-tilt-y", "0deg");
+        d.style.setProperty("--card-shift-x", "0px");
+        d.style.setProperty("--card-shift-y", "0px");
+      });
+    }
+    return d;
+  }
   function showCat(c) {
+    activeCategory = c;
     [].forEach.call(tabs.children, function (b) {
       b.setAttribute("aria-selected", b.dataset.c === c);
     });
-    list.innerHTML = "";
     list.style.setProperty("--ac", ACC[c]);
-    MENU[c].forEach(function (m, i) {
-      var d = document.createElement("article");
-      d.className = "item";
-      d.id =
-        "menu-item-" +
-        m[0]
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "");
-      d.style.animationDelay = i * 50 + "ms";
-      var priceMarkup = m[1]
-        ? '<span class="price">₱' + m[1] + "</span>"
-        : "";
-      d.innerHTML =
-        productArtwork(c, i, m[0]) +
-        '<div class="top"><h3>' +
-        m[0] +
-        "</h3>" +
-        priceMarkup +
-        "</div>" +
-        (m[2] ? '<div class="notes">' + m[2] + "</div>" : "") +
-        (m[3] ? '<div class="ing">' + m[3] + "</div>" : "");
-      var openButton = document.createElement("button");
-      openButton.className = "item-open-mobile";
-      openButton.type = "button";
-      openButton.setAttribute("aria-haspopup", "dialog");
-      openButton.setAttribute("aria-controls", "menuProductDialog");
-      openButton.innerHTML =
-        '<span class="item-open-title-row"><span class="item-open-name">' +
-        m[0] +
-        "</span>" +
-        priceMarkup +
-        '</span><span class="item-open-meta-row"><span class="item-open-meta">' +
-        (m[2] ? '<span class="item-open-notes">' + m[2] + "</span>" : "") +
-        (m[2] && m[3] ? " · " : "") +
-        (m[3] ? '<span class="item-open-ing">' + m[3] + "</span>" : "") +
-        '</span><span class="item-open-hint">Click to view</span></span>';
-      openButton.addEventListener("click", function () {
-        showProductDialog(c, i, m);
-      });
-      d.appendChild(openButton);
-      list.appendChild(d);
+    categoryPanels.forEach(function (panel, category) {
+      panel.hidden = mobileMenuView.matches && category !== c;
     });
-    if (!reduce) {
-      list.querySelectorAll(".item").forEach(function (item) {
-        item.addEventListener("pointermove", function (event) {
-          if (event.pointerType !== "mouse") return;
-          var bounds = item.getBoundingClientRect();
-          var x = (event.clientX - bounds.left) / bounds.width - 0.5;
-          var y = (event.clientY - bounds.top) / bounds.height - 0.5;
-          item.style.setProperty("--card-tilt-x", (-y * 7).toFixed(2) + "deg");
-          item.style.setProperty("--card-tilt-y", (x * 9).toFixed(2) + "deg");
-          item.style.setProperty("--card-shift-x", (x * 3).toFixed(1) + "px");
-          item.style.setProperty("--card-shift-y", (y * 3).toFixed(1) + "px");
-        });
-        item.addEventListener("pointerleave", function () {
-          item.style.setProperty("--card-tilt-x", "0deg");
-          item.style.setProperty("--card-tilt-y", "0deg");
-          item.style.setProperty("--card-shift-x", "0px");
-          item.style.setProperty("--card-shift-y", "0px");
-        });
-      });
-    }
   }
   window.navigateToProduct = function (category, productName) {
     if (!MENU[category]) return;
@@ -712,6 +730,23 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     };
     tabs.appendChild(b);
   });
+  cats.forEach(function (category, categoryIndex) {
+    var panel = document.createElement("section"),
+      heading = document.createElement("h3");
+    panel.className = "menu-category";
+    panel.dataset.category = category;
+    panel.setAttribute("aria-labelledby", "menu-category-" + categoryIndex);
+    panel.style.setProperty("--ac", ACC[category]);
+    heading.className = "menu-category-heading";
+    heading.id = "menu-category-" + categoryIndex;
+    heading.textContent = category;
+    panel.appendChild(heading);
+    MENU[category].forEach(function (product, productIndex) {
+      panel.appendChild(createMenuItem(category, productIndex, product));
+    });
+    categoryPanels.set(category, panel);
+    list.appendChild(panel);
+  });
   tabs.addEventListener("keydown", function (e) {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
     e.preventDefault();
@@ -726,6 +761,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     });
   });
   showCat(cats[0]);
+  mobileMenuView.addEventListener("change", function () {
+    showCat(activeCategory);
+  });
   var featuredBrews = [
     {
       category: "Coffee & Cocoa",
