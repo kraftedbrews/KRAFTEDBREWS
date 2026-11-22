@@ -2546,10 +2546,17 @@ footer p {
   color: #9a9a9a;
 }
 .footer-social {
+  position: static;
+  inset: auto;
+  z-index: auto;
   display: flex;
   justify-content: center;
   gap: 12px;
+  padding: 0;
   margin-top: 20px;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 .footer-social a {
   display: grid;
