@@ -111,7 +111,7 @@ function GalleryCarousel() {
       >
         <header className="instagram-post-header">
           <span className="instagram-avatar" aria-hidden="true">
-            KB
+            <img src="/images/krafted-brews-header-logo.png" alt="" />
           </span>
           <div className="instagram-account">
             <strong>kraftedbrews</strong>
