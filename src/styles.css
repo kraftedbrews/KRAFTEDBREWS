@@ -1455,6 +1455,7 @@ h2 {
 .gallery {
   overflow: hidden;
   background: var(--oat);
+  padding-top: clamp(42px, 6vw, 78px);
 }
 .gallery-heading {
   display: flex;
