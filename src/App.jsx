@@ -396,6 +396,12 @@ export default function App() {
             <p className="notes" id="menuDialogNotes" />
             <p className="ing" id="menuDialogIng" />
           </div>
+          <div
+            className="menu-dialog-products"
+            id="menuDialogProducts"
+            role="group"
+            aria-label="Browse products"
+          />
         </dialog>
       </section>
 

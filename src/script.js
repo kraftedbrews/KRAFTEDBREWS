@@ -313,6 +313,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     dialogTitle = $("menuDialogTitle"),
     dialogPrice = $("menuDialogPrice"),
     dialogOptions = $("menuDialogOptions"),
+    dialogProducts = $("menuDialogProducts"),
     dialogTags = $("menuDialogTags"),
     dialogNotes = $("menuDialogNotes"),
     dialogIng = $("menuDialogIng"),
@@ -332,11 +333,44 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       };
     });
   }
+  function renderDialogProducts(category, selectedIndex) {
+    var label = document.createElement("span");
+    label.className = "menu-dialog-products-label";
+    label.textContent = "More products";
+    dialogProducts.replaceChildren(label);
+    MENU[category].forEach(function (product, productIndex) {
+      var button = document.createElement("button"),
+        artwork = document.createElement("span"),
+        name = document.createElement("span");
+      button.className = "menu-dialog-product";
+      button.type = "button";
+      button.setAttribute("aria-label", "View " + product[0]);
+      button.setAttribute(
+        "aria-pressed",
+        productIndex === selectedIndex ? "true" : "false",
+      );
+      artwork.className = "menu-dialog-product-image";
+      artwork.setAttribute("aria-hidden", "true");
+      artwork.innerHTML = productArtwork(category, productIndex, product[0]);
+      var image = artwork.querySelector("img");
+      if (image) image.alt = "";
+      name.className = "menu-dialog-product-name";
+      name.textContent = product[0];
+      button.append(artwork, name);
+      button.addEventListener("click", function () {
+        showProductDialog(category, productIndex, product);
+      });
+      dialogProducts.appendChild(button);
+    });
+  }
   function showProductDialog(category, index, product) {
-    var options = getProductOptions(product),
+    var wasOpen = productDialog.open,
+      isMobile = window.matchMedia("(max-width: 700px)").matches,
+      options = getProductOptions(product),
       useServingOptions =
-        options.length > 0 && window.matchMedia("(max-width: 700px)").matches;
+        options.length > 0 && isMobile;
     dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
+    renderDialogProducts(category, index);
     dialogTitle.textContent = product[0];
     dialogPrice.textContent = useServingOptions
       ? "₱" + options[0].price
@@ -374,13 +408,21 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     dialogIng.textContent = product[3];
     dialogIng.hidden = !product[3];
     window.clearTimeout(productDialogCloseTimer);
-    productDialog.classList.remove("is-visible", "is-closing");
-    productDialog.showModal();
-    if (window.matchMedia("(max-width: 700px)").matches) {
-      requestAnimationFrame(function () {
-        productDialog.classList.add("is-visible");
-      });
+    if (wasOpen) {
+      productDialog.classList.remove("is-closing");
+      if (isMobile) productDialog.classList.add("is-visible");
+      var selectedButton = dialogProducts.querySelector('[aria-pressed="true"]');
+      if (selectedButton) selectedButton.focus();
+    } else {
+      productDialog.classList.remove("is-visible", "is-closing");
+      productDialog.showModal();
     }
+    requestAnimationFrame(function () {
+      if (isMobile) productDialog.classList.add("is-visible");
+      var selectedButton = dialogProducts.querySelector('[aria-pressed="true"]');
+      if (selectedButton)
+        selectedButton.scrollIntoView({ block: "nearest", inline: "center" });
+    });
   }
   function closeProductDialog() {
     if (!productDialog.open || productDialog.classList.contains("is-closing"))
