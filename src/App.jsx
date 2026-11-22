@@ -493,7 +493,7 @@ export default function App() {
           </span>
           <small>Specialty Coffee House</small>
         </a>
-        <nav className="footer-social" aria-label="Social media">
+        <div className="footer-social" role="group" aria-label="Social media">
           <a
             href="https://www.instagram.com/kraftedbrews"
             target="_blank"
@@ -516,7 +516,7 @@ export default function App() {
               <path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v5h4v-5h3l1-4h-4V9c0-.7.3-1 1-1Z" />
             </svg>
           </a>
-        </nav>
+        </div>
         <p>© Krafted Conglomerate Corporation</p>
       </footer>
 
