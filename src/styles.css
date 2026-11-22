@@ -2545,6 +2545,40 @@ footer p {
   text-transform: uppercase;
   color: #9a9a9a;
 }
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.footer-social a {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--esp);
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+.footer-social a:hover {
+  border-color: var(--caramel);
+  background: var(--caramel);
+  color: #fff;
+}
+.footer-social svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.footer-social a:last-child svg {
+  fill: currentColor;
+  stroke: none;
+}
 /* chat */
 #chatTab {
   position: fixed;
