@@ -21,6 +21,18 @@ const promoImages = [
   },
 ];
 
+const galleryImages = [
+  { src: "/images/gallery/gallery-1.png", alt: "Krafted Brews cafe moment" },
+  { src: "/images/gallery/gallery-2.png", alt: "Krafted Brews coffee and pastries" },
+  { src: "/images/gallery/gallery-3.png", alt: "Krafted Brews drinks served fresh" },
+  { src: "/images/gallery/gallery-4.png", alt: "A crafted drink at Krafted Brews" },
+  { src: "/images/gallery/gallery-5.png", alt: "Customers enjoying Krafted Brews" },
+  { src: "/images/gallery/gallery-6.png", alt: "Krafted Brews cafe atmosphere" },
+  { src: "/images/gallery/gallery-7.png", alt: "Freshly prepared Krafted Brews menu" },
+  { src: "/images/gallery/gallery-8.png", alt: "Krafted Brews coffee experience" },
+  { src: "/images/gallery/gallery-9.png", alt: "A special moment at Krafted Brews" },
+];
+
 export default function App() {
   return (
     <>
@@ -60,6 +72,11 @@ export default function App() {
                 <path d="M8 8a4 4 0 0 1 8 0M20 11h1a2 2 0 0 1 0 4h-2" />
               </svg>
               <span>Menu</span>
+            </a>
+          </li>
+          <li>
+            <a href="#gallery">
+              <span>Gallery</span>
             </a>
           </li>
           <li>
@@ -403,6 +420,29 @@ export default function App() {
             aria-label="Browse products"
           />
         </dialog>
+      </section>
+
+      <section className="gallery" id="gallery" aria-labelledby="galleryHeading">
+        <div className="wrap">
+          <div className="gallery-heading">
+            <p>From our cafe</p>
+            <h2 id="galleryHeading">
+              <span className="script">A glimpse</span> of Krafted.
+            </h2>
+          </div>
+          <div className="gallery-grid" aria-label="Krafted Brews gallery">
+            {galleryImages.map((image, index) => (
+              <figure className={`gallery-item gallery-item-${index + 1}`} key={image.src}>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section

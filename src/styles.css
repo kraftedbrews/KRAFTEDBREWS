@@ -385,6 +385,9 @@ nav ul a.active::after {
   nav ul li:nth-child(3) {
     order: 3;
   }
+  nav ul li:nth-child(4) {
+    order: 4;
+  }
   nav ul a {
     display: flex;
     min-height: 48px;
@@ -1448,6 +1451,85 @@ h2 {
 .home-story-link span {
   margin-left: 8px;
   color: var(--caramel);
+}
+.gallery {
+  overflow: hidden;
+  background: #fff;
+}
+.gallery-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.gallery-heading p {
+  margin: 0 0 8px;
+  color: var(--caramel);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.gallery-heading h2 {
+  margin: 0;
+  font-size: clamp(34px, 5vw, 58px);
+  text-align: right;
+}
+.gallery-heading h2 .script {
+  display: block;
+  color: var(--caramel);
+  font-size: 0.82em;
+  text-align: left;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: clamp(150px, 16vw, 220px);
+  gap: 12px;
+}
+.gallery-item {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--oat);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.55s cubic-bezier(.22, 1, .36, 1);
+}
+.gallery-item:hover img {
+  transform: scale(1.035);
+}
+.gallery-item-1 {
+  grid-column: span 5;
+  grid-row: span 2;
+}
+.gallery-item-2,
+.gallery-item-3 {
+  grid-column: span 3;
+}
+.gallery-item-4 {
+  grid-column: span 4;
+}
+.gallery-item-5,
+.gallery-item-6,
+.gallery-item-7 {
+  grid-column: span 4;
+}
+.gallery-item-8 {
+  grid-column: span 7;
+}
+.gallery-item-9 {
+  grid-column: span 5;
+}
+.gallery-item-8,
+.gallery-item-9 {
+  grid-row: span 2;
 }
 .promo-eyebrow {
   margin: 0 0 16px;
@@ -2849,6 +2931,36 @@ h2 {
   #visit .split > div:first-child > .btn {
     display: table;
     margin: 0 auto;
+  }
+  .gallery-heading {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .gallery-heading p {
+    margin-bottom: 8px;
+  }
+  .gallery-heading h2 {
+    text-align: center;
+  }
+  .gallery-heading h2 .script {
+    text-align: center;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 180px;
+    gap: 8px;
+  }
+  .gallery-item,
+  .gallery-item-1,
+  .gallery-item-8,
+  .gallery-item-9 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+  .gallery-item-1,
+  .gallery-item-8 {
+    grid-column: span 2;
   }
   .home-story {
     padding: 48px 5vw;
