@@ -158,7 +158,9 @@ function GalleryCarousel() {
             aria-label="Previous photo"
             onClick={() => moveBy(-1)}
           >
-            <span aria-hidden="true">‹</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m14.5 5.5-6.5 6.5 6.5 6.5" />
+            </svg>
           </button>
           <button
             className="instagram-photo-arrow instagram-photo-next"
@@ -166,7 +168,9 @@ function GalleryCarousel() {
             aria-label="Next photo"
             onClick={() => moveBy(1)}
           >
-            <span aria-hidden="true">›</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+            </svg>
           </button>
         </div>
         <footer className="instagram-post-footer">
