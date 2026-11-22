@@ -606,9 +606,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     );
     */
   }
-  var categoryPanels = new Map(),
-    activeCategory = cats[0],
-    mobileMenuView = matchMedia("(max-width: 700px)");
+  var categoryPanels = new Map();
   function createMenuItem(c, i, m) {
     var d = document.createElement("article");
     d.className = "item";
@@ -685,13 +683,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     return d;
   }
   function showCat(c) {
-    activeCategory = c;
     [].forEach.call(tabs.children, function (b) {
       b.setAttribute("aria-selected", b.dataset.c === c);
     });
     list.style.setProperty("--ac", ACC[c]);
     categoryPanels.forEach(function (panel, category) {
-      panel.hidden = mobileMenuView.matches && category !== c;
+      panel.hidden = category !== c;
     });
   }
   window.navigateToProduct = function (category, productName) {
@@ -761,9 +758,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     });
   });
   showCat(cats[0]);
-  mobileMenuView.addEventListener("change", function () {
-    showCat(activeCategory);
-  });
   var featuredBrews = [
     {
       category: "Coffee & Cocoa",

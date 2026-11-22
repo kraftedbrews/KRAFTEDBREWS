@@ -1869,11 +1869,6 @@ h2 {
   color: var(--esp);
   font-size: clamp(22px, 2.2vw, 28px);
 }
-@media (min-width: 701px) {
-  .tabs {
-    display: none;
-  }
-}
 .item {
   position: relative;
   background: var(--oat);
