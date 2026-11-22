@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const promoImages = [
   {
     src: "/images/promo/promo-1.png",
@@ -22,16 +24,160 @@ const promoImages = [
 ];
 
 const galleryImages = [
-  { src: "/images/gallery/gallery-1.png", alt: "Krafted Brews cafe moment" },
-  { src: "/images/gallery/gallery-2.png", alt: "Krafted Brews coffee and pastries" },
-  { src: "/images/gallery/gallery-3.png", alt: "Krafted Brews drinks served fresh" },
-  { src: "/images/gallery/gallery-4.png", alt: "A crafted drink at Krafted Brews" },
-  { src: "/images/gallery/gallery-5.png", alt: "Customers enjoying Krafted Brews" },
-  { src: "/images/gallery/gallery-6.png", alt: "Krafted Brews cafe atmosphere" },
-  { src: "/images/gallery/gallery-7.png", alt: "Freshly prepared Krafted Brews menu" },
-  { src: "/images/gallery/gallery-8.png", alt: "Krafted Brews coffee experience" },
-  { src: "/images/gallery/gallery-9.png", alt: "A special moment at Krafted Brews" },
+  {
+    src: "/images/gallery/gallery-1.png",
+    alt: "Krafted Brews storefront",
+    caption: "Find your way to Krafted",
+  },
+  {
+    src: "/images/gallery/gallery-2.png",
+    alt: "The welcoming entrance to the Krafted Brews cafe",
+    caption: "Come on in",
+  },
+  {
+    src: "/images/gallery/gallery-3.png",
+    alt: "Krafted Brews sign, coffee, and leafy decor",
+    caption: "A little Krafted character",
+  },
+  {
+    src: "/images/gallery/gallery-4.png",
+    alt: "Books and greenery inside the cafe",
+    caption: "Settle into a cozy corner",
+  },
+  {
+    src: "/images/gallery/gallery-5.png",
+    alt: "Colorful cactus cups on the cafe counter",
+    caption: "The little details",
+  },
+  {
+    src: "/images/gallery/gallery-6.png",
+    alt: "Framed coffee-themed wall art",
+    caption: "Made for coffee lovers",
+  },
+  {
+    src: "/images/gallery/gallery-7.png",
+    alt: "Botanical artwork on the cafe wall",
+    caption: "A thoughtful touch",
+  },
+  {
+    src: "/images/gallery/gallery-8.png",
+    alt: "A cup of coffee served beside a book",
+    caption: "Pause for a proper cup",
+  },
+  {
+    src: "/images/gallery/gallery-9.png",
+    alt: "A bag of Krafted Brews coffee beans",
+    caption: "Take Krafted home",
+  },
 ];
+
+function GalleryCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const count = galleryImages.length;
+
+  useEffect(() => {
+    if (isPaused) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % count);
+    }, 4200);
+
+    return () => window.clearInterval(intervalId);
+  }, [count, isPaused]);
+
+  function moveBy(step) {
+    setActiveIndex((current) => (current + step + count) % count);
+    setIsPaused(true);
+  }
+
+  function selectImage(index) {
+    setActiveIndex(index);
+    setIsPaused(true);
+  }
+
+  return (
+    <div
+      className="gallery-carousel"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Krafted Brews gallery"
+    >
+      <div className="gallery-stage">
+        {galleryImages.map((image, index) => {
+          const wrappedDistance = (index - activeIndex + count) % count;
+          const distance =
+            wrappedDistance > count / 2 ? wrappedDistance - count : wrappedDistance;
+          const isVisible = Math.abs(distance) <= 1;
+          const isActive = distance === 0;
+
+          return (
+            <button
+              className="gallery-slide"
+              type="button"
+              key={image.src}
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${count}: ${image.caption}`}
+              aria-hidden={!isVisible}
+              aria-current={isActive ? "true" : undefined}
+              tabIndex={isVisible ? 0 : -1}
+              onClick={() => selectImage(index)}
+              style={{
+                "--slide-offset": `${distance * 82}%`,
+                "--slide-scale": isActive ? 1 : 0.82,
+                "--slide-rotation": `${distance * -5}deg`,
+                zIndex: isActive ? 2 : 1,
+                visibility: isVisible ? "visible" : "hidden",
+              }}
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+          );
+        })}
+      </div>
+      <div className="gallery-caption" aria-live="polite">
+        <p>{galleryImages[activeIndex].caption}</p>
+        <span>
+          {String(activeIndex + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+        </span>
+      </div>
+      <div className="gallery-controls" aria-label="Gallery controls">
+        <button
+          className="gallery-arrow"
+          type="button"
+          aria-label="Previous photo"
+          onClick={() => moveBy(-1)}
+        >
+          <span aria-hidden="true">←</span>
+        </button>
+        <button
+          className="gallery-pause"
+          type="button"
+          onClick={() => setIsPaused((paused) => !paused)}
+        >
+          {isPaused ? "Play slideshow" : "Pause slideshow"}
+        </button>
+        <button
+          className="gallery-arrow"
+          type="button"
+          aria-label="Next photo"
+          onClick={() => moveBy(1)}
+        >
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   return (
@@ -425,23 +571,15 @@ export default function App() {
       <section className="gallery" id="gallery" aria-labelledby="galleryHeading">
         <div className="wrap">
           <div className="gallery-heading">
-            <p>From our cafe</p>
+            <p>Inside Krafted Brews</p>
             <h2 id="galleryHeading">
-              <span className="script">A glimpse</span> of Krafted.
+              <span className="script">A little taste</span> of our cafe.
             </h2>
+            <span className="gallery-intro">
+              From the cafe corners to the cups we craft, take a look around.
+            </span>
           </div>
-          <div className="gallery-grid" aria-label="Krafted Brews gallery">
-            {galleryImages.map((image, index) => (
-              <figure className={`gallery-item gallery-item-${index + 1}`} key={image.src}>
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </figure>
-            ))}
-          </div>
+          <GalleryCarousel />
         </div>
       </section>
 
