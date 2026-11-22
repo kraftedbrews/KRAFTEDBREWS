@@ -243,6 +243,17 @@ export default function App() {
           </li>
           <li>
             <a href="#gallery">
+              <svg
+                className="mobile-nav-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect x="4" y="5" width="13" height="15" rx="1.5" />
+                <path d="m5.5 17 3.2-3.5a1.2 1.2 0 0 1 1.8 0l2 2.2 1.2-1.2a1.2 1.2 0 0 1 1.8 0l.5.5" />
+                <circle cx="8.5" cy="9" r="1" />
+                <path d="M8 2.5h11.5a2 2 0 0 1 2 2V17" />
+              </svg>
               <span>Gallery</span>
             </a>
           </li>
