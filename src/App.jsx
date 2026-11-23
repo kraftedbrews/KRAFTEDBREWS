@@ -510,6 +510,7 @@ export default function App() {
           aria-roledescription="carousel"
           aria-label="Featured Krafted Brews menu"
         >
+          <span className="menu-showcase-badge">BEST SELLER</span>
           <div className="menu-showcase-wordmark" aria-hidden="true">
             <span id="menuSlideWordmark">Iced Spanish Latte</span>
           </div>

@@ -1708,6 +1708,28 @@ h2 {
 .menu-showcase[data-slide="4"] {
   background-color: #d9b77f;
 }
+.menu-showcase-badge {
+  position: absolute;
+  z-index: 4;
+  top: clamp(20px, 4vw, 40px);
+  left: clamp(24px, 8vw, 120px);
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid rgba(40, 21, 11, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--esp);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 0 8px 20px rgba(40, 21, 11, 0.08);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
 .menu-showcase-wordmark {
   position: absolute;
   top: 37%;
