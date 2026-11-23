@@ -543,11 +543,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
   var productPhotos = {
     Affogato: "/images/products/affogato.jpg",
-    "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.webp",
     "Ensaymada Cheesecake": "/images/products/ensaymada-cheesecake.jpg",
-    "Berry Soda": "/images/products/cutouts/berry-soda-cutout.webp",
-    "Hiraya Latte": "/images/products/cutouts/hiraya-latte-cutout.webp",
-    "Iced Spanish Latte": "/images/products/cutouts/iced-spanish-latte.webp",
+    "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
     Lemangonade: "/images/products/lemangonade.jpg",
     "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
   };
