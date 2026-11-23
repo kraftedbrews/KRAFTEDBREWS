@@ -585,6 +585,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
     Lemangonade: "/images/products/lemangonade.jpg",
     "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
+    "Kold Brew (500 ml)": "/images/products/cutouts/kold-brew-cutout.webp",
   };
   function productArtwork(category, index, productName) {
     var photo = productPhotos[productName];
