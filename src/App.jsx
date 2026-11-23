@@ -206,12 +206,22 @@ function GalleryCarousel() {
 
 export default function App() {
   useLayoutEffect(() => {
-    if (window.location.hash !== "#menuShowcase") return;
+    const scrollToMenuShowcase = () => {
+      if (window.location.hash !== "#menuShowcase") return;
 
-    document.getElementById("menuShowcase")?.scrollIntoView({
-      behavior: "instant",
-      block: "start",
-    });
+      window.requestAnimationFrame(() => {
+        document.getElementById("menuShowcase")?.scrollIntoView({
+          behavior: "instant",
+          block: "start",
+        });
+      });
+    };
+
+    scrollToMenuShowcase();
+    window.addEventListener("hashchange", scrollToMenuShowcase);
+    return () => {
+      window.removeEventListener("hashchange", scrollToMenuShowcase);
+    };
   }, []);
 
   return (
