@@ -470,7 +470,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           behavior: reduce ? "auto" : "smooth",
           block: "start",
         });
-        history.replaceState(null, "", "#menuShowcase");
+        history.replaceState(
+          history.state,
+          "",
+          location.pathname + location.search,
+        );
       },
       { once: true },
     );

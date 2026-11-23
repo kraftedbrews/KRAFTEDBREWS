@@ -210,10 +210,18 @@ export default function App() {
       if (window.location.hash !== "#menuShowcase") return;
 
       window.requestAnimationFrame(() => {
-        document.getElementById("menuShowcase")?.scrollIntoView({
+        const showcase = document.getElementById("menuShowcase");
+        if (!showcase) return;
+
+        showcase.scrollIntoView({
           behavior: "instant",
           block: "start",
         });
+        window.history.replaceState(
+          window.history.state,
+          "",
+          window.location.pathname + window.location.search,
+        );
       });
     };
 
