@@ -543,9 +543,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
   var productPhotos = {
     Affogato: "/images/products/affogato.jpg",
-    "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.jpg",
+    "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.png",
     "Ensaymada Cheesecake": "/images/products/ensaymada-cheesecake.jpg",
-    "French Macarons (6 pcs)": "/images/products/cutouts/macaroons-cutout.jpg",
+    "French Macarons (6 pcs)": "/images/products/cutouts/macaroons-cutout.png",
     "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
     Lemangonade: "/images/products/lemangonade.jpg",
     "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
@@ -808,8 +808,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Caffè Latte",
       wordmark: "Caffè Latte",
       notes: "Hot or iced · espresso and steamed milk",
-      image: "/images/products/cutouts/caffe-latte.png",
-      imageAlt: "Iced latte in a Krafted Brews cup",
+      model: 0,
       decoration: "beans",
     },
     {
@@ -817,8 +816,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Key Lime Pie (1 slice)",
       wordmark: "Key Lime Pie",
       notes: "Bright citrus · whipped cream",
-      image: "/images/products/cutouts/key-lime-pie.png",
-      imageAlt: "A slice of Krafted Brews key lime pie",
+      model: 1,
       decoration: "pie",
     },
     {
@@ -826,8 +824,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Kold Brew (500 ml)",
       wordmark: "Kold Brew (500 ml)",
       notes: "Cold · ready-to-drink cold brew",
-      image: "/images/products/cutouts/kold-brew.png",
-      imageAlt: "A cup of Krafted Brews cold brew",
+      model: 2,
       decoration: "ice",
     },
     {
@@ -835,8 +832,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "French Macarons (6 pcs)",
       wordmark: "French Macarons",
       notes: "Assorted flavors · crisp shells",
-      image: "/images/products/cutouts/macaroons-cutout.jpg",
-      imageAlt: "A tray of colorful Krafted Brews macarons",
+      cutout: "/images/products/cutouts/macaroons-cutout.png",
+      cutoutAlt: "Tray of Krafted Brews French macarons",
       decoration: "macarons",
     },
     {
@@ -844,8 +841,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Kold Brew (500 ml)",
       wordmark: "Kold Brew",
       notes: "Black & strong · ready to drink",
-      image: "/images/products/cutouts/kold-brew-cutout.jpg",
-      imageAlt: "A bottle of Krafted Brews Kold Brew",
+      cutout: "/images/products/cutouts/kold-brew-cutout.png",
+      cutoutAlt: "Krafted Brews Kold Brew bottle",
       decoration: "ice",
     },
     {
@@ -853,8 +850,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Caramel Macchiato",
       wordmark: "Caramel Macchiato",
       notes: "Espresso · milk · caramel",
-      image: "/images/products/cutouts/caramel-macchiato-cutout.jpg",
-      imageAlt: "A cup of Krafted Brews caramel macchiato",
+      cutout: "/images/products/cutouts/caramel-macchiato-cutout.png",
+      cutoutAlt: "Krafted Brews caramel macchiato",
       decoration: "caramel",
     },
   ];
@@ -866,14 +863,16 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     showcaseDots = $("menuSlideDots"),
     showcasePause = $("menuSlidePause"),
     showcaseWordmark = $("menuSlideWordmark"),
-    showcaseImage = $("menuSlideImage"),
+    showcaseCanvas = $("menuCv"),
+    showcaseCutout = $("menuSlideCutout"),
     featuredBrewIndex = 0,
     showcasePaused = reduce,
     showcaseVisible = false,
     showcaseHovered = false,
     showcaseFocused = false,
     swipeStartX = null,
-    swipeStartY = null;
+    swipeStartY = null,
+    menuModels = [];
   function showFeaturedBrew(index) {
     featuredBrewIndex =
       (index + featuredBrews.length) % featuredBrews.length;
@@ -884,8 +883,17 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     showcaseProduct.textContent = brew.product;
     showcaseNotes.textContent = brew.notes;
     showcaseWordmark.textContent = brew.wordmark;
-    showcaseImage.src = brew.image;
-    showcaseImage.alt = brew.imageAlt;
+    if (brew.cutout) {
+      showcaseCanvas.hidden = true;
+      showcaseCutout.hidden = false;
+      showcaseCutout.src = brew.cutout;
+      showcaseCutout.alt = brew.cutoutAlt;
+    } else {
+      showcaseCutout.hidden = true;
+      showcaseCutout.removeAttribute("src");
+      showcaseCanvas.hidden = false;
+      setFeaturedProduct(brew.model);
+    }
     showcase.setAttribute(
       "aria-label",
       "Featured Krafted Brews menu. Showing " +
@@ -1959,11 +1967,101 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     object.position.sub(center);
     heroCup.add(object);
   };
+  /* ---------- featured menu products ---------- */
+  var M = mk($("menuCv")),
+    menuProductRoot = new T.Group(),
+    menuModelHeights = [],
+    menuDragging = false,
+    menuDragX = 0,
+    menuDragY = 0,
+    menuRotation = { x: 0, y: 0, velocity: 0 },
+    menuDistance = 7,
+    menuDistanceTarget = 7;
+  M.s.add(menuProductRoot);
+  M.c.position.set(0, 0.12, 7);
+  M.c.lookAt(0, 0, 0);
+  function setFeaturedProduct(index) {
+    menuModels.forEach(function (model, modelIndex) {
+      model.visible = modelIndex === index;
+    });
+    if (menuRotation) {
+      menuRotation.x = 0;
+      menuRotation.y = 0;
+      menuRotation.velocity = 0;
+    }
+    if (menuProductRoot) menuProductRoot.rotation.set(0, 0, 0);
+  }
+  menuModels = PRODUCTS.map(function (product) {
+    var object =
+      product === PRODUCTS[0] ? buildIcedCoffeeCup() : product.build();
+    object.updateMatrixWorld(true);
+    var bounds = new T.Box3().setFromObject(object),
+      size = bounds.getSize(new T.Vector3()),
+      center = bounds.getCenter(new T.Vector3()),
+      model = new T.Group();
+    object.position.sub(center);
+    model.add(object);
+    menuProductRoot.add(model);
+    model.visible = false;
+    menuModelHeights.push(size.y);
+    return model;
+  });
+  M.onfit = function () {
+    var targetHeight = M.w / M.h < 0.78 ? 1.6 : 1.8;
+    menuModels.forEach(function (model, i) {
+      model.scale.setScalar(targetHeight / menuModelHeights[i]);
+    });
+  };
+  M.onfit();
+  setFeaturedProduct(featuredBrews[featuredBrewIndex].model);
+
+  var menuCanvas = $("menuCv");
+  var menuAutoRotation = 0;
+  if (!mobile3D) {
+    menuCanvas.addEventListener("pointerdown", function (event) {
+      menuDragging = true;
+      menuDragX = event.clientX;
+      menuDragY = event.clientY;
+      menuRotation.velocity = 0;
+      menuCanvas.setPointerCapture(event.pointerId);
+    });
+    menuCanvas.addEventListener("pointermove", function (event) {
+      if (!menuDragging) return;
+      var deltaX = event.clientX - menuDragX;
+      var deltaY = event.clientY - menuDragY;
+      menuRotation.y += deltaX * 0.012;
+      menuRotation.x += deltaY * 0.008;
+      menuRotation.x = Math.max(-0.45, Math.min(0.45, menuRotation.x));
+      menuRotation.velocity = deltaX * 0.001;
+      menuDragX = event.clientX;
+      menuDragY = event.clientY;
+    });
+    function stopMenuDrag(event) {
+      menuDragging = false;
+      if (event && menuCanvas.hasPointerCapture(event.pointerId)) {
+        menuCanvas.releasePointerCapture(event.pointerId);
+      }
+    }
+    menuCanvas.addEventListener("pointerup", stopMenuDrag);
+    menuCanvas.addEventListener("pointercancel", stopMenuDrag);
+    menuCanvas.addEventListener(
+      "wheel",
+      function (event) {
+        event.preventDefault();
+        menuDistanceTarget = Math.min(
+          7,
+          Math.max(3.8, menuDistanceTarget + event.deltaY * 0.004),
+        );
+      },
+      { passive: false },
+    );
+  }
+
   /* ---------- loop ---------- */
-  var vis = { h: true };
+  var vis = { h: true, m: false };
   var loopPending = false;
   function scheduleLoop() {
-    if (loopPending || document.hidden || !vis.h) return;
+    if (loopPending || document.hidden || (!vis.h && !vis.m)) return;
     loopPending = true;
     requestAnimationFrame(loop);
   }
@@ -1975,13 +2073,15 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }).observe($("hero"));
   new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
+      vis.m = entry.isIntersecting;
       showcaseVisible = entry.isIntersecting;
+      scheduleLoop();
     });
   }).observe(showcase);
   var last3DFrame = 0;
   function loop() {
     loopPending = false;
-    if (document.hidden || !vis.h) return;
+    if (document.hidden || (!vis.h && !vis.m)) return;
     var now = performance.now();
     if (mobileFrameInterval && now - last3DFrame < mobileFrameInterval) {
       scheduleLoop();
@@ -2011,6 +2111,16 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           );
         });
       }
+    }
+    if (vis.m) {
+      if (!menuDragging) {
+        menuRotation.velocity *= 0.94;
+        menuRotation.y += menuRotation.velocity + menuAutoRotation;
+      }
+      menuDistance += (menuDistanceTarget - menuDistance) * 0.1;
+      M.c.position.set(0, 0.12, menuDistance);
+      menuProductRoot.rotation.set(menuRotation.x, menuRotation.y, 0);
+      M.r.render(M.s, M.c);
     }
     scheduleLoop();
   }
