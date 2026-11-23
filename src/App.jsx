@@ -584,7 +584,16 @@ export default function App() {
             >
               <span aria-hidden="true">×</span>
             </button>
-            <div id="menuDialogArtwork" />
+            <div id="menuDialogArtwork">
+              <button
+                className="menu-dialog-view-image"
+                id="menuDialogViewImage"
+                type="button"
+                aria-haspopup="dialog"
+              >
+                <span>View full image</span>
+              </button>
+            </div>
           </div>
           <div className="menu-dialog-info">
             <div className="top">
@@ -608,6 +617,21 @@ export default function App() {
             role="group"
             aria-label="Browse products"
           />
+        </dialog>
+        <dialog
+          className="menu-full-image-dialog"
+          id="menuFullImageDialog"
+          aria-label="Full product image"
+        >
+          <button
+            className="menu-dialog-close menu-full-image-close"
+            id="menuFullImageClose"
+            type="button"
+            aria-label="Close full image"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+          <img id="menuFullImage" alt="" decoding="async" />
         </dialog>
       </section>
 

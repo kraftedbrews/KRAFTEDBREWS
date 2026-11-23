@@ -310,6 +310,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     list = $("menuList"),
     productDialog = $("menuProductDialog"),
     dialogArtwork = $("menuDialogArtwork"),
+    dialogViewImage = $("menuDialogViewImage"),
+    fullImageDialog = $("menuFullImageDialog"),
+    fullImage = $("menuFullImage"),
+    fullImageClose = $("menuFullImageClose"),
     dialogTitle = $("menuDialogTitle"),
     dialogPrice = $("menuDialogPrice"),
     dialogOptions = $("menuDialogOptions"),
@@ -370,6 +374,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       useServingOptions =
         options.length > 0 && isMobile;
     dialogArtwork.innerHTML = productArtwork(category, index, product[0]);
+    var productArt = dialogArtwork.querySelector(".item-art");
+    dialogViewImage.hidden = !productArt;
+    if (productArt) productArt.appendChild(dialogViewImage);
     renderDialogProducts(category, index);
     dialogTitle.textContent = product[0];
     dialogPrice.textContent = useServingOptions
@@ -454,6 +461,33 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   $("menuDialogClose").addEventListener("click", function () {
     closeProductDialog();
   });
+  dialogViewImage.addEventListener("click", function () {
+    var productImage = dialogArtwork.querySelector(".product-photo");
+    if (!productImage) return;
+    fullImage.src = productImage.currentSrc || productImage.src;
+    fullImage.alt = productImage.alt || dialogTitle.textContent;
+    fullImageDialog.showModal();
+  });
+  fullImageDialog.addEventListener("cancel", function (event) {
+    event.preventDefault();
+    fullImageDialog.close();
+  });
+  fullImageDialog.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    fullImageDialog.close();
+  });
+  fullImageClose.addEventListener("click", function () {
+    fullImageDialog.close();
+  });
+  fullImageDialog.addEventListener("click", function (event) {
+    if (event.target === fullImageDialog) fullImageDialog.close();
+  });
+  fullImageDialog.addEventListener("close", function () {
+    fullImage.removeAttribute("src");
+    fullImage.alt = "";
+    if (productDialog.open) dialogViewImage.focus();
+  });
   productDialog.addEventListener("cancel", function (event) {
     event.preventDefault();
     closeProductDialog();
@@ -471,7 +505,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   });
   var productSheetPointerStart = null;
   productDialog.addEventListener("pointerdown", function (event) {
-    if (!event.target.closest(".menu-dialog-artwork")) return;
+    if (
+      !event.target.closest(".menu-dialog-artwork") ||
+      event.target.closest(".menu-dialog-view-image")
+    )
+      return;
     productSheetPointerStart = { x: event.clientX, y: event.clientY };
     productDialog.setPointerCapture(event.pointerId);
   });
