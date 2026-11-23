@@ -3255,12 +3255,12 @@ footer p {
 }
 @media (max-width: 700px) {
   #chatTab {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     border-radius: 14px;
     padding: 12px 20px;
   }
   #chat {
-    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     height: min(540px, calc(78vh - 62px));
   }
 }
