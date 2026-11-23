@@ -337,7 +337,7 @@ export default function App() {
           <figure className="hero-product">
             <canvas
               id="heroCv"
-              aria-label="Interactive 3D Krafted Brews iced coffee cup"
+              aria-label="Interactive 3D Krafted Brews product"
             />
             <figcaption className="hero-3d-hint">
               Drag to rotate · scroll to zoom

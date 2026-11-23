@@ -1541,6 +1541,227 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     { passive: false },
   );
 
+  var koldBrewTexture = null,
+    koldBrewCapTexture = null,
+    koldBrewModelTemplate = null;
+  function buildKoldBrewBottle() {
+    if (koldBrewModelTemplate) return koldBrewModelTemplate.clone(true);
+
+    var bottle = new T.Group();
+    var profile = [
+      [0.35, 0],
+      [0.43, 0.05],
+      [0.49, 0.14],
+      [0.52, 0.28],
+      [0.53, 1.62],
+      [0.51, 1.82],
+      [0.46, 1.98],
+      [0.39, 2.14],
+      [0.32, 2.3],
+      [0.29, 2.48],
+      [0.29, 2.68],
+      [0.29, 2.74],
+      [0.29, 2.78],
+      [0.29, 3.02],
+      [0.27, 3.06],
+    ];
+    var shellProfile = [[0, 0]].concat(
+      profile.filter(function (point) {
+        return point[1] <= 2.74;
+      }),
+      [[0, 2.74]],
+    );
+    var shellMaterial = new T.MeshPhysicalMaterial({
+      color: 0xd8e7ed,
+      transparent: true,
+      opacity: 0.22,
+      roughness: 0.12,
+      transmission: 0.16,
+      thickness: 0.08,
+      ior: 1.33,
+      clearcoat: 1,
+      clearcoatRoughness: 0.04,
+      side: T.DoubleSide,
+      depthWrite: false,
+    });
+    bottle.add(lat(shellProfile, shellMaterial, 72));
+    bottle.add(
+      lat(
+        [
+          [0, 0.12],
+          [0.36, 0.12],
+          [0.45, 0.18],
+          [0.49, 0.3],
+          [0.49, 1.6],
+          [0.48, 1.84],
+          [0.43, 1.99],
+          [0.36, 2.08],
+          [0, 2.08],
+        ],
+        new T.MeshStandardMaterial({
+          color: 0x32170f,
+          roughness: 0.32,
+        }),
+        72,
+      ),
+    );
+
+    if (!koldBrewCapTexture) {
+      var capCanvas = document.createElement("canvas");
+      capCanvas.width = 256;
+      capCanvas.height = 64;
+      var capContext = capCanvas.getContext("2d");
+      capContext.fillStyle = "#14151d";
+      capContext.fillRect(0, 0, capCanvas.width, capCanvas.height);
+      for (var rib = 0; rib < 64; rib++) {
+        capContext.fillStyle = rib % 2 ? "#242630" : "#090a10";
+        capContext.fillRect(rib * 4, 0, 2, 45);
+      }
+      capContext.fillStyle = "#20212a";
+      capContext.fillRect(0, 46, capCanvas.width, 12);
+      capContext.fillStyle = "#08090f";
+      capContext.fillRect(0, 58, capCanvas.width, 2);
+      capContext.fillStyle = "#30313a";
+      capContext.fillRect(0, 61, capCanvas.width, 1);
+      koldBrewCapTexture = new T.CanvasTexture(capCanvas);
+      koldBrewCapTexture.colorSpace = T.SRGBColorSpace;
+    }
+    var capMaterial = new T.MeshStandardMaterial({
+      map: koldBrewCapTexture,
+      roughness: 0.34,
+      metalness: 0.04,
+    });
+    bottle.add(
+      lat(
+        [
+          [0.25, 2.72],
+          [0.27, 2.735],
+          [0.29, 2.77],
+          [0.29, 2.98],
+          [0.28, 3.015],
+          [0.27, 3.03],
+        ],
+        capMaterial,
+        64,
+      ),
+    );
+    var capTop = new T.Mesh(
+      new T.CylinderGeometry(0.27, 0.27, 0.016, 64),
+      new T.MeshStandardMaterial({ color: 0x171820, roughness: 0.38 }),
+    );
+    capTop.position.y = 3.03;
+    bottle.add(capTop);
+
+    [
+      [0.29, 2.705, 0.012],
+      [0.43, 0.14, 0.018],
+      [0.48, 0.29, 0.012],
+    ].forEach(function (ring) {
+      var rim = new T.Mesh(
+        new T.TorusGeometry(ring[0], ring[2], 8, 64),
+        shellMaterial,
+      );
+      rim.rotation.x = Math.PI / 2;
+      rim.position.y = ring[1];
+      bottle.add(rim);
+    });
+
+    if (!koldBrewTexture) {
+      koldBrewTexture = new T.TextureLoader().load(
+        "/images/products/cutouts/kold-brew-3d.webp",
+        function (texture) {
+          texture.colorSpace = T.SRGBColorSpace;
+          if (H) {
+            texture.anisotropy = Math.min(
+              8,
+              H.r.capabilities.getMaxAnisotropy(),
+            );
+          }
+        },
+        undefined,
+        function (error) {
+          console.error("Could not load the Kold Brew product texture.", error);
+        },
+      );
+      koldBrewTexture.colorSpace = T.SRGBColorSpace;
+    }
+
+    var photoSegments = 72,
+      photoRows = 112,
+      photoHeight = 3.06,
+      photoArc = Math.PI * 2,
+      positions = [],
+      uvs = [],
+      indices = [];
+    function radiusAt(y) {
+      for (var index = 1; index < profile.length; index++) {
+        if (y <= profile[index][1]) {
+          var lower = profile[index - 1],
+            upper = profile[index],
+            t = (y - lower[1]) / (upper[1] - lower[1]);
+          return lower[0] + (upper[0] - lower[0]) * t;
+        }
+      }
+      return profile[profile.length - 1][0];
+    }
+    for (var row = 0; row <= photoRows; row++) {
+      var v = row / photoRows,
+        y = v * photoHeight,
+        radius = radiusAt(y) + 0.008;
+      for (var column = 0; column <= photoSegments; column++) {
+        var u = column / photoSegments,
+          angle = (u - 0.5) * photoArc;
+        positions.push(
+          Math.sin(angle) * radius,
+          y,
+          Math.cos(angle) * radius,
+        );
+        uvs.push(u, v);
+      }
+    }
+    for (var rowIndex = 0; rowIndex < photoRows; rowIndex++) {
+      for (var columnIndex = 0; columnIndex < photoSegments; columnIndex++) {
+        var lowerLeft = rowIndex * (photoSegments + 1) + columnIndex,
+          lowerRight = lowerLeft + 1,
+          upperLeft = lowerLeft + photoSegments + 1,
+          upperRight = upperLeft + 1;
+        indices.push(
+          lowerLeft,
+          lowerRight,
+          upperLeft,
+          lowerRight,
+          upperRight,
+          upperLeft,
+        );
+      }
+    }
+    var photoGeometry = new T.BufferGeometry();
+    photoGeometry.setAttribute(
+      "position",
+      new T.Float32BufferAttribute(positions, 3),
+    );
+    photoGeometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
+    photoGeometry.setIndex(indices);
+    photoGeometry.computeVertexNormals();
+    var photo = new T.Mesh(
+      photoGeometry,
+      new T.MeshBasicMaterial({
+        map: koldBrewTexture,
+        transparent: true,
+        alphaTest: 0.02,
+        depthWrite: false,
+        side: T.FrontSide,
+        toneMapped: false,
+      }),
+    );
+    photo.renderOrder = 2;
+    bottle.add(photo);
+
+    bottle.scale.setScalar(1.15);
+    koldBrewModelTemplate = bottle;
+    return bottle.clone(true);
+  }
+
   /* ---------- featured products ---------- */
   var PRODUCTS = [
     {
@@ -1695,162 +1916,30 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       ],
     },
     {
-      n: "Cold brew glass",
-      d: "Condensation, ice and straw",
-      build: function () {
-        var g = new T.Group();
-        var gm = new T.MeshStandardMaterial({
-          color: 0xd8e5e9,
-          transparent: true,
-          opacity: 0.3,
-          roughness: 0.1,
-          side: T.DoubleSide,
-          depthWrite: false,
-        });
-        g.add(
-          new T.Mesh(new T.CylinderGeometry(0.8, 0.65, 2.1, 64, 1, true), gm),
-        );
-        var rimMaterial = new T.MeshStandardMaterial({
-          color: 0xd9e5e8,
-          transparent: true,
-          opacity: 0.72,
-          roughness: 0.22,
-          depthWrite: false,
-        });
-        [
-          [0.8, 1.05, 0.022],
-          [0.65, -1.05, 0.016],
-        ].forEach(function (edge) {
-          var rim = new T.Mesh(
-            new T.TorusGeometry(edge[0], edge[2], 8, 64),
-            rimMaterial,
-          );
-          rim.rotation.x = Math.PI / 2;
-          rim.position.y = edge[1];
-          g.add(rim);
-        });
-        var glassHighlightMaterial = new T.MeshBasicMaterial({
-          color: 0xf4f8f8,
-          transparent: true,
-          opacity: 0.48,
-          depthWrite: false,
-        });
-        [
-          [
-            [-0.72, 0.88, 0.31],
-            [-0.68, 0.3, 0.34],
-            [-0.62, -0.3, 0.35],
-            [-0.57, -0.88, 0.33],
-          ],
-          [
-            [0.72, 0.88, 0.31],
-            [0.68, 0.3, 0.34],
-            [0.62, -0.3, 0.35],
-            [0.57, -0.88, 0.33],
-          ],
-        ].forEach(function (points) {
-          var curve = new T.CatmullRomCurve3(
-            points.map(function (point) {
-              return new T.Vector3(point[0], point[1], point[2]);
-            }),
-          );
-          g.add(
-            new T.Mesh(
-              new T.TubeGeometry(curve, 18, 0.012, 6, false),
-              glassHighlightMaterial,
-            ),
-          );
-        });
-        var brewCanvas = document.createElement("canvas");
-        brewCanvas.width = 256;
-        brewCanvas.height = 512;
-        var brewContext = brewCanvas.getContext("2d");
-        var brewGradient = brewContext.createLinearGradient(0, 0, 0, 512);
-        brewGradient.addColorStop(0, "#9a6037");
-        brewGradient.addColorStop(0.24, "#704426");
-        brewGradient.addColorStop(0.62, "#482719");
-        brewGradient.addColorStop(1, "#2b170f");
-        brewContext.fillStyle = brewGradient;
-        brewContext.fillRect(0, 0, brewCanvas.width, brewCanvas.height);
-        var brewTexture = new T.CanvasTexture(brewCanvas);
-        brewTexture.colorSpace = T.SRGBColorSpace;
-        var liq = new T.Mesh(
-          new T.CylinderGeometry(0.76, 0.63, 1.7, 64),
-          new T.MeshStandardMaterial({
-            map: brewTexture,
-            roughness: 0.26,
-          }),
-        );
-        liq.position.y = -0.18;
-        g.add(liq);
-        var ice = new T.MeshStandardMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.55,
-          roughness: 0.1,
-        });
-        [
-          [0.2, 0.75, 0.1],
-          [-0.3, 0.6, -0.2],
-          [0.25, 0.45, -0.3],
-        ].forEach(function (p, i) {
-          var m = new T.Mesh(
-            new RoundedBoxGeometry(0.5, 0.5, 0.5, 3, 0.06),
-            ice,
-          );
-          m.position.set(p[0], p[1], p[2]);
-          m.rotation.set(i, i * 1.3, i * 0.7);
-          g.add(m);
-        });
-        var sw = new T.Mesh(
-          new T.CylinderGeometry(0.04, 0.04, 2.6, 10),
-          new T.MeshStandardMaterial({ color: 0x4a2c1a }),
-        );
-        sw.position.set(0.3, 0.55, 0);
-        sw.rotation.z = -0.15;
-        g.add(sw);
-        var dg = new T.MeshStandardMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.7,
-          roughness: 0.05,
-        });
-        for (var i = 0; i < 26; i++) {
-          var a = Math.random() * 6.28,
-            y = -0.9 + Math.random() * 1.7,
-            r = 0.8 - 0.15 * (1 - (y + 1.05) / 2.1),
-            dd = new T.Mesh(
-              new T.SphereGeometry(0.03 + Math.random() * 0.025, 8, 6),
-              dg,
-            );
-          dd.position.set(Math.cos(a) * r * 1.0, y, Math.sin(a) * r);
-          g.add(dd);
-        }
-        g.position.y = 0.1;
-        g.scale.setScalar(1.15);
-        return g;
-      },
+      n: "Kold Brew",
+      d: "500 ml ready-to-drink cold brew bottle",
+      build: buildKoldBrewBottle,
       hot: [
         [
-          0.72,
-          0.1,
-          0.35,
-          "Condensation",
-          "Served at 3°C. The glass sweats within a minute of leaving the bar.",
+          0,
+          0.5,
+          0.5,
+          "500 ml bottle",
+          "Ready-to-drink cold brew.",
         ],
         [
           0,
-          0.9,
-          0.4,
-          "Ice and brew",
-          "Steeped 18 hours with large-format ice so it stays strong, not watery.",
+          1.25,
+          0.5,
+          "BLACK | STRONG",
+          "The product label shown on the bottle.",
         ],
         [
-          0.1,
-          1.9,
           0,
-          "Milk options",
-          "Sip black, or add oat, almond or coconut cream foam.",
+          1.95,
+          0.45,
+          "Krafted Brews",
+          "Original branding preserved from the product image.",
         ],
       ],
     },
