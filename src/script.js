@@ -543,9 +543,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
   var productPhotos = {
     Affogato: "/images/products/affogato.jpg",
-    "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.png",
+    "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.webp",
     "Ensaymada Cheesecake": "/images/products/ensaymada-cheesecake.jpg",
-    "Berry Soda": "/images/products/cutouts/berry-soda-cutout.png",
+    "Berry Soda": "/images/products/cutouts/berry-soda-cutout.webp",
     "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
     Lemangonade: "/images/products/lemangonade.jpg",
     "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
@@ -832,7 +832,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Berry Soda",
       wordmark: "Berry Soda",
       notes: "Sparkling fruit soda · fresh blueberries",
-      cutout: "/images/products/cutouts/berry-soda-cutout.png",
+      cutout: "/images/products/cutouts/berry-soda-cutout.webp",
       cutoutAlt: "Cup of Krafted Brews Berry Soda",
       decoration: "berries",
     },
@@ -841,7 +841,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Kold Brew (500 ml)",
       wordmark: "Kold Brew",
       notes: "Black & strong · ready to drink",
-      cutout: "/images/products/cutouts/kold-brew-cutout.png",
+      cutout: "/images/products/cutouts/kold-brew-cutout.webp",
       cutoutAlt: "Krafted Brews Kold Brew bottle",
       decoration: "ice",
     },
@@ -850,7 +850,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       product: "Caramel Macchiato",
       wordmark: "Caramel Macchiato",
       notes: "Espresso · milk · caramel",
-      cutout: "/images/products/cutouts/caramel-macchiato-cutout.png",
+      cutout: "/images/products/cutouts/caramel-macchiato-cutout.webp",
       cutoutAlt: "Krafted Brews caramel macchiato",
       decoration: "caramel",
     },
@@ -873,6 +873,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     swipeStartX = null,
     swipeStartY = null,
     menuModels = [];
+  featuredBrews.forEach(function (brew) {
+    if (!brew.cutout) return;
+    var image = new Image();
+    image.decoding = "async";
+    image.src = brew.cutout;
+  });
   function showFeaturedBrew(index) {
     featuredBrewIndex =
       (index + featuredBrews.length) % featuredBrews.length;
@@ -890,7 +896,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       showcaseCutout.alt = brew.cutoutAlt;
     } else {
       showcaseCutout.hidden = true;
-      showcaseCutout.removeAttribute("src");
       showcaseCanvas.hidden = false;
       setFeaturedProduct(brew.model);
     }

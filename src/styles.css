@@ -1768,21 +1768,21 @@ h2 {
   z-index: 1;
   top: 4%;
   left: 50%;
-  width: min(40vw, 440px);
-  height: 82%;
+  width: min(32vw, 340px);
+  height: 62%;
   object-fit: contain;
   transform: translateX(-50%);
   filter: drop-shadow(0 24px 24px rgba(40, 21, 11, 0.18));
   pointer-events: none;
 }
 .menu-showcase[data-slide="3"] .menu-showcase-cutout {
-  width: min(38vw, 420px);
-  height: 86%;
+  width: min(32vw, 340px);
+  height: 62%;
 }
 .menu-showcase[data-slide="4"] .menu-showcase-cutout,
 .menu-showcase[data-slide="5"] .menu-showcase-cutout {
-  width: min(34vw, 360px);
-  height: 88%;
+  width: min(32vw, 340px);
+  height: 62%;
 }
 .menu-scatter {
   position: absolute;
@@ -2027,9 +2027,9 @@ h2 {
   .menu-showcase[data-slide="3"] .menu-showcase-cutout,
   .menu-showcase[data-slide="4"] .menu-showcase-cutout,
   .menu-showcase[data-slide="5"] .menu-showcase-cutout {
-    top: 5%;
-    width: min(66vw, 320px);
-    height: 69%;
+    top: 4%;
+    width: min(56vw, 270px);
+    height: 52%;
   }
   .menu-scatter-one {
     left: 8%;
