@@ -1722,6 +1722,15 @@ h2 {
 .menu-showcase[data-slide="2"] {
   background-color: #bed4aa;
 }
+.menu-showcase[data-slide="3"] {
+  background-color: #c9a9a1;
+}
+.menu-showcase[data-slide="4"] {
+  background-color: #9db0c1;
+}
+.menu-showcase[data-slide="5"] {
+  background-color: #d9b77f;
+}
 .menu-showcase-wordmark {
   position: absolute;
   top: 37%;
@@ -1741,18 +1750,43 @@ h2 {
   transform: translate(-50%, -50%);
   user-select: none;
 }
-.menu-showcase-cup {
+.menu-showcase-product {
   position: absolute;
   z-index: 1;
   top: 4%;
   left: 50%;
   width: min(48vw, 520px);
   height: 88%;
+  object-fit: contain;
   transform: translateX(-50%);
   filter: drop-shadow(0 26px 26px rgba(40, 21, 11, 0.2));
-  cursor: grab;
-  touch-action: pan-y;
-  pointer-events: auto;
+  pointer-events: none;
+}
+.menu-showcase[data-slide="1"] .menu-showcase-product {
+  top: 20%;
+  width: min(22vw, 220px);
+  height: auto;
+}
+.menu-showcase[data-slide="2"] .menu-showcase-product {
+  top: 12%;
+  width: min(42vw, 360px);
+  height: 62%;
+}
+.menu-showcase[data-slide="3"] .menu-showcase-product {
+  top: 1%;
+  width: min(38vw, 420px);
+  height: 88%;
+  object-position: center;
+}
+.menu-showcase[data-slide="4"] .menu-showcase-product {
+  top: 1%;
+  width: min(34vw, 360px);
+  height: 92%;
+}
+.menu-showcase[data-slide="5"] .menu-showcase-product {
+  top: 2%;
+  width: min(38vw, 420px);
+  height: 86%;
 }
 .menu-scatter {
   position: absolute;
@@ -1987,11 +2021,35 @@ h2 {
     top: 34%;
     font-size: clamp(42px, 10.5vw, 78px);
   }
-  .menu-showcase-cup {
+  .menu-showcase-product {
     top: 3%;
     width: min(76vw, 370px);
     height: 75%;
-    cursor: default;
+  }
+  .menu-showcase[data-slide="1"] .menu-showcase-product {
+    top: 22%;
+    width: min(56vw, 210px);
+    height: auto;
+  }
+  .menu-showcase[data-slide="2"] .menu-showcase-product {
+    top: 10%;
+    width: min(50vw, 220px);
+    height: 60%;
+  }
+  .menu-showcase[data-slide="3"] .menu-showcase-product {
+    top: 2%;
+    width: min(70vw, 330px);
+    height: 74%;
+  }
+  .menu-showcase[data-slide="4"] .menu-showcase-product {
+    top: 4%;
+    width: min(60vw, 260px);
+    height: 72%;
+  }
+  .menu-showcase[data-slide="5"] .menu-showcase-product {
+    top: 5%;
+    width: min(70vw, 330px);
+    height: 68%;
   }
   .menu-scatter-one {
     left: 8%;

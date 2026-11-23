@@ -512,10 +512,12 @@ export default function App() {
           <span className="menu-scatter menu-scatter-two" aria-hidden="true" />
           <span className="menu-scatter menu-scatter-three" aria-hidden="true" />
           <span className="menu-scatter menu-scatter-four" aria-hidden="true" />
-          <canvas
-            id="menuCv"
-            className="menu-showcase-cup"
-            aria-label="Rotating 3D featured Krafted Brews product"
+          <img
+            id="menuSlideImage"
+            className="menu-showcase-product"
+            src="/images/products/cutouts/caffe-latte.png"
+            alt="Krafted Brews iced latte"
+            decoding="async"
           />
           <div className="menu-showcase-caption" aria-live="polite">
             <p id="menuSlideCategory">Coffee &amp; Cocoa</p>
