@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 const promoImages = [
   {
@@ -205,6 +205,15 @@ function GalleryCarousel() {
 }
 
 export default function App() {
+  useLayoutEffect(() => {
+    if (window.location.hash !== "#menuShowcase") return;
+
+    document.getElementById("menuShowcase")?.scrollIntoView({
+      behavior: "instant",
+      block: "start",
+    });
+  }, []);
+
   return (
     <>
       <div className="scroll-progress" id="scrollProgress" aria-hidden="true" />
