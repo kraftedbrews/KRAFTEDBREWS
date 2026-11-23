@@ -1,4 +1,4 @@
-const CACHE_NAME = "krafted-brews-v4";
+const CACHE_NAME = "krafted-brews-v5";
 const STATIC_URLS = [
   "/manifest.webmanifest",
   "/pwa-install.css",
