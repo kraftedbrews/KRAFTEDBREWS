@@ -1407,6 +1407,15 @@
         var rawProgress=Math.max(0,Math.min(1,(scrollY-homeTop)/(handoffEnd-homeTop)));
         var progress=reduce?rawProgress:rawProgress*rawProgress*(3-2*rawProgress);
         homeHandoffProgress=progress;
+        var targetCameraY=storyVisual.clientWidth<700?2.5:1.35;
+        var homeCameraZ=homeSection.clientWidth<700?9:7.2;
+        var cameraY=.8+(targetCameraY-.8)*progress;
+        var cameraZ=homeCameraZ+(7.6-homeCameraZ)*progress;
+        var cameraLookAtY=-.2*(1-progress);
+        homeCamera.position.set(0,cameraY,cameraZ);
+        homeCamera.lookAt(0,cameraLookAtY,0);
+        camera.position.set(0,cameraY,cameraZ);
+        camera.lookAt(0,cameraLookAtY,0);
         if(scheduleHomeFrame&&(homeVisible||progress<1))scheduleHomeFrame();
         if(rawProgress===1&&previousProgress===1)return;
         if(reduce&&homeCup)homeCup.position.y=homeCupBaseY*(1-progress);
@@ -1435,10 +1444,9 @@
           homeCanvas.parentNode.insertBefore(homePlaceholder,homeCanvas);
           document.body.appendChild(homeCanvas);
         }
-        var sourceTop=homeTop-scrollY;
         homeCanvas.style.position="fixed";
         homeCanvas.style.left="0";
-        homeCanvas.style.top=(sourceTop+(headerHeight-sourceTop)*progress)+"px";
+        homeCanvas.style.top=(headerHeight*progress)+"px";
         homeCanvas.style.right="auto";
         homeCanvas.style.bottom="auto";
         homeCanvas.style.width=homeSection.clientWidth+"px";
