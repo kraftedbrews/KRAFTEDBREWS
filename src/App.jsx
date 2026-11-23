@@ -394,11 +394,16 @@ export default function App() {
                 </article>
                 <article className="hero-receipt" data-receipt="2" aria-hidden="true">
                   <p className="hero-receipt-kicker">Cold & bold</p>
-                  <div className="hero-receipt-art hero-receipt-art-cold" aria-hidden="true">
-                    <span className="receipt-cold-cup">
-                      <b />
-                      <i />
-                    </span>
+                  <div className="hero-receipt-art hero-receipt-art-bottle" aria-hidden="true">
+                    <img
+                      src="/images/products/cutouts/kold-brew-cutout.webp"
+                      alt=""
+                      width="374"
+                      height="1000"
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                    />
                   </div>
                   <h2>Kold Brew</h2>
                   <div className="hero-receipt-divider" aria-hidden="true">••••••••••••••••••••••••••••••</div>

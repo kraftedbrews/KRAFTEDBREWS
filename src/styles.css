@@ -781,34 +781,14 @@ nav ul a.active::after {
 .receipt-pie b { width: 18px; height: 14px; top: 8px; left: 37px; }
 .receipt-pie b::before { width: 14px; height: 11px; top: 2px; left: -24px; }
 .receipt-pie b::after { width: 14px; height: 11px; top: 2px; left: 24px; }
-.receipt-cold-cup {
-  position: absolute;
-  width: 62px;
-  height: 92px;
-  bottom: 8px;
-  border: 2px solid #28150b;
-  border-top: 0;
-  background: linear-gradient(145deg, rgba(255,255,255,.9), #5a3219);
-  clip-path: polygon(8% 0, 92% 0, 82% 100%, 18% 100%);
-}
-.receipt-cold-cup b {
-  position: absolute;
-  width: 3px;
-  height: 70px;
-  top: -28px;
-  left: 38px;
-  background: #28150b;
-  transform: rotate(12deg);
-}
-.receipt-cold-cup i {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  top: 29px;
-  left: 20px;
-  border-radius: 3px;
-  background: rgba(255,255,255,.42);
-  transform: rotate(20deg);
+.hero-receipt-art-bottle img {
+  display: block;
+  width: auto;
+  height: 96px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 3px 4px rgba(40, 21, 11, 0.12));
 }
 .hero-receipt-divider {
   width: 100%;
