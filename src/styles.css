@@ -2457,6 +2457,7 @@ h2 {
 .menu-full-image-dialog {
   position: fixed;
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
   width: min(96vw, 1440px);
   height: min(94vh, 1000px);
   max-width: calc(100vw - 24px);
