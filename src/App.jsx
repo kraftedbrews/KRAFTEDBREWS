@@ -506,17 +506,12 @@ export default function App() {
           aria-label="Featured Krafted Brews menu"
         >
           <div className="menu-showcase-wordmark" aria-hidden="true">
-            <span id="menuSlideWordmark">Caffè Latte</span>
+            <span id="menuSlideWordmark">Iced Spanish Latte</span>
           </div>
           <span className="menu-scatter menu-scatter-one" aria-hidden="true" />
           <span className="menu-scatter menu-scatter-two" aria-hidden="true" />
           <span className="menu-scatter menu-scatter-three" aria-hidden="true" />
           <span className="menu-scatter menu-scatter-four" aria-hidden="true" />
-          <canvas
-            id="menuCv"
-            className="menu-showcase-cup"
-            aria-label="Rotating 3D featured Krafted Brews product"
-          />
           <img
             id="menuSlideCutout"
             className="menu-showcase-cutout"
@@ -526,9 +521,9 @@ export default function App() {
           />
           <div className="menu-showcase-caption" aria-live="polite">
             <p id="menuSlideCategory">Coffee &amp; Cocoa</p>
-            <h2 id="menuSlideProduct">Caffè Latte</h2>
+            <h2 id="menuSlideProduct">Iced Spanish Latte</h2>
             <span id="menuSlideNotes">
-              Hot or iced · espresso and steamed milk
+              Espresso · milk · condensed milk
             </span>
             <a id="menuSlideLink" href="#menuList">
               Explore the menu <span aria-hidden="true">↗</span>

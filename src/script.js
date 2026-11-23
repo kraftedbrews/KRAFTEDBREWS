@@ -546,7 +546,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     "Caramel Macchiato": "/images/products/cutouts/caramel-macchiato-cutout.webp",
     "Ensaymada Cheesecake": "/images/products/ensaymada-cheesecake.jpg",
     "Berry Soda": "/images/products/cutouts/berry-soda-cutout.webp",
-    "Iced Spanish Latte": "/images/products/iced-spanish-latte.jpg",
+    "Hiraya Latte": "/images/products/cutouts/hiraya-latte-cutout.webp",
+    "Iced Spanish Latte": "/images/products/cutouts/iced-spanish-latte.webp",
     Lemangonade: "/images/products/lemangonade.jpg",
     "Matcha Milkshake": "/images/products/matcha-milkshake.jpg",
   };
@@ -805,26 +806,29 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   var featuredBrews = [
     {
       category: "Coffee & Cocoa",
-      product: "Caffè Latte",
-      wordmark: "Caffè Latte",
-      notes: "Hot or iced · espresso and steamed milk",
-      model: 0,
+      product: "Iced Spanish Latte",
+      wordmark: "Iced Spanish Latte",
+      notes: "Espresso · milk · condensed milk",
+      cutout: "/images/products/cutouts/iced-spanish-latte.webp",
+      cutoutAlt: "Iced Spanish Latte in a Krafted Brews cup",
       decoration: "beans",
     },
     {
-      category: "Pastries",
-      product: "Key Lime Pie (1 slice)",
-      wordmark: "Key Lime Pie",
-      notes: "Bright citrus · whipped cream",
-      model: 1,
-      decoration: "pie",
+      category: "Coffee & Cocoa",
+      product: "Hiraya Latte",
+      wordmark: "Hiraya Latte",
+      notes: "House specialty latte",
+      cutout: "/images/products/cutouts/hiraya-latte-cutout.webp",
+      cutoutAlt: "Hiraya Latte in a Krafted Brews cup",
+      decoration: "beans",
     },
     {
       category: "Miscellaneous",
       product: "Kold Brew (500 ml)",
       wordmark: "Kold Brew (500 ml)",
       notes: "Cold · ready-to-drink cold brew",
-      model: 2,
+      cutout: "/images/products/cutouts/kold-brew-cutout.webp",
+      cutoutAlt: "Krafted Brews Kold Brew bottle",
       decoration: "ice",
     },
     {
@@ -835,15 +839,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       cutout: "/images/products/cutouts/berry-soda-cutout.webp",
       cutoutAlt: "Cup of Krafted Brews Berry Soda",
       decoration: "berries",
-    },
-    {
-      category: "Miscellaneous",
-      product: "Kold Brew (500 ml)",
-      wordmark: "Kold Brew",
-      notes: "Black & strong · ready to drink",
-      cutout: "/images/products/cutouts/kold-brew-cutout.webp",
-      cutoutAlt: "Krafted Brews Kold Brew bottle",
-      decoration: "ice",
     },
     {
       category: "Coffee & Cocoa",
@@ -863,7 +858,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     showcaseDots = $("menuSlideDots"),
     showcasePause = $("menuSlidePause"),
     showcaseWordmark = $("menuSlideWordmark"),
-    showcaseCanvas = $("menuCv"),
     showcaseCutout = $("menuSlideCutout"),
     featuredBrewIndex = 0,
     showcasePaused = reduce,
@@ -871,8 +865,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     showcaseHovered = false,
     showcaseFocused = false,
     swipeStartX = null,
-    swipeStartY = null,
-    menuModels = [];
+    swipeStartY = null;
   featuredBrews.forEach(function (brew) {
     if (!brew.cutout) return;
     var image = new Image();
@@ -889,16 +882,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     showcaseProduct.textContent = brew.product;
     showcaseNotes.textContent = brew.notes;
     showcaseWordmark.textContent = brew.wordmark;
-    if (brew.cutout) {
-      showcaseCanvas.hidden = true;
-      showcaseCutout.hidden = false;
-      showcaseCutout.src = brew.cutout;
-      showcaseCutout.alt = brew.cutoutAlt;
-    } else {
-      showcaseCutout.hidden = true;
-      showcaseCanvas.hidden = false;
-      setFeaturedProduct(brew.model);
-    }
+    showcaseCutout.hidden = false;
+    showcaseCutout.src = brew.cutout;
+    showcaseCutout.alt = brew.cutoutAlt;
     showcase.setAttribute(
       "aria-label",
       "Featured Krafted Brews menu. Showing " +
@@ -1972,101 +1958,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     object.position.sub(center);
     heroCup.add(object);
   };
-  /* ---------- featured menu products ---------- */
-  var M = mk($("menuCv")),
-    menuProductRoot = new T.Group(),
-    menuModelHeights = [],
-    menuDragging = false,
-    menuDragX = 0,
-    menuDragY = 0,
-    menuRotation = { x: 0, y: 0, velocity: 0 },
-    menuDistance = 7,
-    menuDistanceTarget = 7;
-  M.s.add(menuProductRoot);
-  M.c.position.set(0, 0.12, 7);
-  M.c.lookAt(0, 0, 0);
-  function setFeaturedProduct(index) {
-    menuModels.forEach(function (model, modelIndex) {
-      model.visible = modelIndex === index;
-    });
-    if (menuRotation) {
-      menuRotation.x = 0;
-      menuRotation.y = 0;
-      menuRotation.velocity = 0;
-    }
-    if (menuProductRoot) menuProductRoot.rotation.set(0, 0, 0);
-  }
-  menuModels = PRODUCTS.map(function (product) {
-    var object =
-      product === PRODUCTS[0] ? buildIcedCoffeeCup() : product.build();
-    object.updateMatrixWorld(true);
-    var bounds = new T.Box3().setFromObject(object),
-      size = bounds.getSize(new T.Vector3()),
-      center = bounds.getCenter(new T.Vector3()),
-      model = new T.Group();
-    object.position.sub(center);
-    model.add(object);
-    menuProductRoot.add(model);
-    model.visible = false;
-    menuModelHeights.push(size.y);
-    return model;
-  });
-  M.onfit = function () {
-    var targetHeight = M.w / M.h < 0.78 ? 1.6 : 1.8;
-    menuModels.forEach(function (model, i) {
-      model.scale.setScalar(targetHeight / menuModelHeights[i]);
-    });
-  };
-  M.onfit();
-  setFeaturedProduct(featuredBrews[featuredBrewIndex].model);
-
-  var menuCanvas = $("menuCv");
-  var menuAutoRotation = 0;
-  if (!mobile3D) {
-    menuCanvas.addEventListener("pointerdown", function (event) {
-      menuDragging = true;
-      menuDragX = event.clientX;
-      menuDragY = event.clientY;
-      menuRotation.velocity = 0;
-      menuCanvas.setPointerCapture(event.pointerId);
-    });
-    menuCanvas.addEventListener("pointermove", function (event) {
-      if (!menuDragging) return;
-      var deltaX = event.clientX - menuDragX;
-      var deltaY = event.clientY - menuDragY;
-      menuRotation.y += deltaX * 0.012;
-      menuRotation.x += deltaY * 0.008;
-      menuRotation.x = Math.max(-0.45, Math.min(0.45, menuRotation.x));
-      menuRotation.velocity = deltaX * 0.001;
-      menuDragX = event.clientX;
-      menuDragY = event.clientY;
-    });
-    function stopMenuDrag(event) {
-      menuDragging = false;
-      if (event && menuCanvas.hasPointerCapture(event.pointerId)) {
-        menuCanvas.releasePointerCapture(event.pointerId);
-      }
-    }
-    menuCanvas.addEventListener("pointerup", stopMenuDrag);
-    menuCanvas.addEventListener("pointercancel", stopMenuDrag);
-    menuCanvas.addEventListener(
-      "wheel",
-      function (event) {
-        event.preventDefault();
-        menuDistanceTarget = Math.min(
-          7,
-          Math.max(3.8, menuDistanceTarget + event.deltaY * 0.004),
-        );
-      },
-      { passive: false },
-    );
-  }
-
   /* ---------- loop ---------- */
-  var vis = { h: true, m: false };
+  var vis = { h: true };
   var loopPending = false;
   function scheduleLoop() {
-    if (loopPending || document.hidden || (!vis.h && !vis.m)) return;
+    if (loopPending || document.hidden || !vis.h) return;
     loopPending = true;
     requestAnimationFrame(loop);
   }
@@ -2078,15 +1974,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }).observe($("hero"));
   new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
-      vis.m = entry.isIntersecting;
       showcaseVisible = entry.isIntersecting;
-      scheduleLoop();
     });
   }).observe(showcase);
   var last3DFrame = 0;
   function loop() {
     loopPending = false;
-    if (document.hidden || (!vis.h && !vis.m)) return;
+    if (document.hidden || !vis.h) return;
     var now = performance.now();
     if (mobileFrameInterval && now - last3DFrame < mobileFrameInterval) {
       scheduleLoop();
@@ -2116,16 +2010,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           );
         });
       }
-    }
-    if (vis.m) {
-      if (!menuDragging) {
-        menuRotation.velocity *= 0.94;
-        menuRotation.y += menuRotation.velocity + menuAutoRotation;
-      }
-      menuDistance += (menuDistanceTarget - menuDistance) * 0.1;
-      M.c.position.set(0, 0.12, menuDistance);
-      menuProductRoot.rotation.set(menuRotation.x, menuRotation.y, 0);
-      M.r.render(M.s, M.c);
     }
     scheduleLoop();
   }
