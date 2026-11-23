@@ -2523,6 +2523,29 @@ h2 {
 .menu-dialog-info .ing {
   margin: 10px 0 0;
 }
+.menu-dialog-best-seller {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 20px;
+  padding: 0 18px;
+  border: 1px solid rgba(201, 138, 61, 0.38);
+  border-radius: 999px;
+  background: var(--esp);
+  color: #fffaf2;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+.menu-dialog-best-seller:hover {
+  transform: translateY(-1px);
+  background: #472817;
+}
 .menu-dialog-products {
   display: none;
 }

@@ -461,6 +461,21 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   $("menuDialogClose").addEventListener("click", function () {
     closeProductDialog();
   });
+  $("menuDialogBestSeller").addEventListener("click", function (event) {
+    event.preventDefault();
+    productDialog.addEventListener(
+      "close",
+      function () {
+        $("menuShowcase").scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+          block: "start",
+        });
+        history.replaceState(null, "", "#menuShowcase");
+      },
+      { once: true },
+    );
+    closeProductDialog();
+  });
   dialogViewImage.addEventListener("click", function () {
     var productImage = dialogArtwork.querySelector(".product-photo");
     if (!productImage) return;

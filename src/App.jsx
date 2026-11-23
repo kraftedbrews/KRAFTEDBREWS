@@ -610,6 +610,10 @@ export default function App() {
             <div className="menu-dialog-tags" id="menuDialogTags" />
             <p className="notes" id="menuDialogNotes" />
             <p className="ing" id="menuDialogIng" />
+            <a className="menu-dialog-best-seller" id="menuDialogBestSeller" href="#menuShowcase">
+              <span>Best Sellers</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
           <div
             className="menu-dialog-products"
